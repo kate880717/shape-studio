@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>모양 만들기 스튜디오 ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root {
+    --primary: #ff6b6b;
+    --secondary: #4ecdc4;
+    --accent: #feca57;
+    --circle-color: #f9ca24;
+    --triangle-color: #4a90e2;
+    --square-color: #eb4d4b;
+    --purple: #a55eea;
+    --green: #26de81;
+    --pink: #fc5c65;
+  }
+  * { box-sizing:border-box; user-select:none; -webkit-user-select:none; font-family:'Jua','Gaegu',sans-serif; }
+  body {
+    margin:0; padding:0;
+    background:linear-gradient(135deg,#fbc2eb 0%,#a6c1ee 100%);
+    height:100vh; overflow:hidden;
+    display:flex; justify-content:center; align-items:center;
+    color:#2d3436;
+  }
+  #app-wrapper {
+    width:1280px; height:820px; position:relative;
+    transform-origin:center center;
+    background:rgba(255,255,255,0.5); backdrop-filter:blur(10px);
+    border-radius:30px; box-shadow:0 20px 50px rgba(0,0,0,0.15);
+    border:2px solid rgba(255,255,255,0.6);
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+
+  /* Header */
+  header {
+    height:75px; background:rgba(255,255,255,0.7);
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0 25px; flex-shrink:0; border-bottom:2px solid rgba(255,255,255,0.8);
+  }
+  header h1 { margin:0; font-size:30px; color:var(--primary); }
+  .header-buttons { display:flex; gap:10px; }
+  .speaker-btn {
+    background:#fff; border:none; width:50px; height:50px; border-radius:50%;
+    font-size:22px; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  }
+  .speaker-btn.on { background:var(--primary); color:white; }
+
+  /* Screens */
+  .screen {
+    flex:1; display:none; flex-direction:column; padding:20px 30px;
+    overflow:hidden; animation:fadeIn 0.5s ease;
+  }
+  .screen.active { display:flex; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;} }
+  @keyframes pop { 0%{transform:scale(0);} 60%{transform:scale(1.2);} 100%{transform:scale(1);} }
+
+  h2 { font-size:30px; color:#333; margin:0 0 15px 0; text-align:center; }
+  .subtitle { font-size:20px; color:#666; text-align:center; margin-bottom:15px; }
+
+  /* Buttons */
+  .btn {
+    padding:12px 30px; font-size:22px; border:none; border-radius:50px;
+    background:var(--secondary); color:white; cursor:pointer;
+    box-shadow:0 8px 18px rgba(78,205,196,0.3); transition:all 0.2s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover { transform:translateY(-2px); }
+  .btn-red { background:var(--primary); box-shadow:0 8px 18px rgba(255,107,107,0.3); }
+  .btn-yellow { background:var(--accent); color:#333; }
+
+  /* Start screen */
+  #screen-start { justify-content:center; align-items:center; }
+  #screen-start h1 { font-size:60px; color:var(--primary); text-shadow:2px 2px 4px rgba(255,255,255,0.8); margin:10px 0; }
+  #student-select {
+    font-size:24px; padding:12px 20px; border-radius:15px; border:3px solid var(--secondary);
+    margin:15px 0; min-width:280px; background:white; cursor:pointer; font-family:'Jua',sans-serif;
+  }
+
+  /* Studio layout */
+  #screen-studio { padding:15px 20px; }
+  .studio-layout { display:flex; gap:15px; flex:1; min-height:0; }
+
+  /* Toolbox */
+  .toolbox {
+    width:240px; background:rgba(255,255,255,0.85); border-radius:20px;
+    padding:15px; display:flex; flex-direction:column; gap:10px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08); overflow-y:auto;
+  }
+  .tool-section {
+    border-bottom:2px dashed #eee; padding-bottom:10px; margin-bottom:5px;
+  }
+  .tool-section:last-child { border-bottom:none; }
+  .tool-section h4 { margin:0 0 8px 0; font-size:14px; color:#666; }
+
+  .shape-grid {
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
+  }
+  .shape-item {
+    width:100%; aspect-ratio:1; cursor:grab; position:relative;
+    display:flex; justify-content:center; align-items:center;
+    transition:transform 0.2s;
+  }
+  .shape-item:hover { transform:scale(1.1); }
+  .shape-item:active { cursor:grabbing; }
+
+  .shape-circle   { background:var(--circle-color); border-radius:50%; }
+  .shape-square   { background:var(--square-color); }
+  .shape-rect     { background:var(--square-color); width:90% !important; height:60% !important; align-self:center; }
+  .shape-triangle {
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 5,95 95,95" fill="%234a90e2"/></svg>');
+    background-size:contain; background-repeat:no-repeat;
+  }
+  .shape-rtri {
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="5,5 5,95 95,95" fill="%234a90e2"/></svg>');
+    background-size:contain; background-repeat:no-repeat;
+  }
+  .shape-diamond {
+    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 95,50 50,95 5,50" fill="%23a55eea"/></svg>');
+    background-size:contain; background-repeat:no-repeat;
+  }
+
+  /* Color palette */
+  .color-grid { display:flex; gap:6px; flex-wrap:wrap; }
+  .color-chip {
+    width:30px; height:30px; border-radius:50%; cursor:pointer;
+    border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.15);
+    transition:transform 0.2s;
+  }
+  .color-chip:hover { transform:scale(1.2); }
+  .color-chip.selected { border-color:#333; transform:scale(1.2); }
+
+  /* Action buttons */
+  .action-btn {
+    padding:8px 12px; border-radius:10px; border:none; font-size:14px;
+    font-weight:bold; cursor:pointer; background:#f1f2f6;
+    display:flex; align-items:center; justify-content:center; gap:5px;
+    transition:all 0.15s; font-family:'Jua',sans-serif;
+  }
+  .action-btn:hover { background:#dfe4ea; }
+  .action-btn:active { transform:scale(0.95); }
+  .action-btn.danger { background:#ff7675; color:white; }
+
+  /* Toggle */
+  .toggle-row {
+    display:flex; align-items:center; gap:8px; padding:5px 0; font-size:14px;
+  }
+  .toggle-switch {
+    position:relative; width:38px; height:22px; background:#ccc;
+    border-radius:20px; cursor:pointer; transition:all 0.2s;
+  }
+  .toggle-switch.on { background:var(--secondary); }
+  .toggle-switch::after {
+    content:''; position:absolute; top:3px; left:3px;
+    width:16px; height:16px; background:white; border-radius:50%;
+    transition:all 0.2s;
+  }
+  .toggle-switch.on::after { left:19px; }
+
+  /* Canvas */
+  .canvas-wrap { flex:1; display:flex; flex-direction:column; min-width:0; }
+  .canvas-area {
+    flex:1; background:white; border-radius:20px; position:relative;
+    overflow:hidden; box-shadow:inset 0 0 20px rgba(0,0,0,0.05);
+    border:3px solid var(--secondary); min-height:0;
+  }
+  .grid-bg {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size:30px 30px; pointer-events:none; opacity:0;
+    transition:opacity 0.3s;
+  }
+  .grid-bg.show { opacity:1; }
+
+  .clone-item {
+    position:absolute; touch-action:none; transform-origin:center center;
+    transition:filter 0.15s, transform 0.05s;
+  }
+  .clone-item.snapping {
+    filter:drop-shadow(0 0 12px var(--accent));
+  }
+  .clone-item.selected {
+    outline:4px dashed var(--primary); z-index:101 !important;
+    filter:drop-shadow(0 0 10px rgba(255,107,107,0.5));
+  }
+
+  .magnet-indicator {
+    position:absolute; pointer-events:none;
+    width:0; height:0; transform:translate(-50%,-50%);
+    z-index:200;
+  }
+  .magnet-pulse {
+    position:absolute; top:0; left:0; width:30px; height:30px;
+    border:3px solid var(--accent); border-radius:50%;
+    transform:translate(-50%,-50%);
+    animation:magnetPulse 0.6s ease-out;
+  }
+  @keyframes magnetPulse {
+    0% { transform:translate(-50%,-50%) scale(0.3); opacity:1; }
+    100% { transform:translate(-50%,-50%) scale(2); opacity:0; }
+  }
+
+  /* Bottom bar */
+  .bottom-bar {
+    margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  }
+  .bottom-bar input {
+    flex:1; min-width:200px; padding:10px 15px; font-size:18px;
+    border-radius:12px; border:2px solid #ccc;
+    user-select:text; -webkit-user-select:text; font-family:'Jua',sans-serif;
+  }
+
+  textarea.stt-text {
+    width:100%; height:60px; background:white; border-radius:12px;
+    padding:10px; font-size:18px; color:#333;
+    border:2px dashed #ccc; resize:none; outline:none;
+    user-select:text; -webkit-user-select:text;
+    font-family:'Jua',sans-serif; line-height:1.4;
+  }
+  textarea.stt-text.recording { border-color:var(--primary); border-style:solid; }
+  .mic-btn {
+    padding:10px 18px; border-radius:50px; border:none;
+    background:var(--primary); color:white; font-size:16px; font-weight:bold;
+    cursor:pointer; box-shadow:0 5px 12px rgba(255,107,107,0.4);
+    transition:all 0.2s;
+  }
+  .mic-btn.recording { animation:pulse 1.5s infinite; background:#c23616; }
+  @keyframes pulse {
+    0%   { transform:scale(1); box-shadow:0 0 0 0 rgba(255,107,107,0.7); }
+    70%  { transform:scale(1.08); box-shadow:0 0 0 14px rgba(255,107,107,0); }
+    100% { transform:scale(1); box-shadow:0 0 0 0 rgba(255,107,107,0); }
+  }
+
+  /* End screen */
+  #screen-end { justify-content:center; align-items:center; }
+  #screen-end h1 { font-size:50px; color:var(--primary); }
+  #artwork-preview {
+    max-width:60%; max-height:300px; border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15); margin:15px 0;
+  }
+
+  /* Loading */
+  #loading {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(255,255,255,0.85); backdrop-filter:blur(5px);
+    display:none; flex-direction:column; justify-content:center; align-items:center; z-index:200;
+  }
+  .spinner { width:70px; height:70px; border:8px solid #f3f3f3; border-top:8px solid var(--primary); border-radius:50%; animation:spin 1s linear infinite; }
+  @keyframes spin { 0%{transform:rotate(0);} 100%{transform:rotate(360deg);} }
+
+  /* Confetti */
+  #reward-overlay {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    pointer-events:none; z-index:300; display:none;
+  }
+  .confetti { position:absolute; font-size:32px; animation:fall 2.5s ease-out forwards; }
+  @keyframes fall {
+    0% { transform:translateY(-50px) rotate(0); opacity:1; }
+    100% { transform:translateY(100vh) rotate(720deg); opacity:0; }
+  }
+
+  /* Idea cards */
+  .idea-card {
+    background:white; border-radius:12px; padding:8px; cursor:pointer;
+    text-align:center; transition:all 0.2s; box-shadow:0 3px 8px rgba(0,0,0,0.05);
+  }
+  .idea-card:hover { transform:translateY(-3px); box-shadow:0 6px 15px rgba(0,0,0,0.1); }
+  .idea-card .icon { font-size:32px; }
+  .idea-card .name { font-size:13px; color:#666; }
+</style>
+</head>
+<body>
+
+<div id="app-wrapper">
+
+  <header>
+    <h1>✨ 모양 만들기 스튜디오</h1>
+    <div class="header-buttons">
+      <button class="speaker-btn" id="speaker-toggle">🔈</button>
+    </div>
+  </header>
+
+  <!-- Stage 0: Start -->
+  <div id="screen-start" class="screen active">
+    <h1>🎨 모양 만들기 스튜디오</h1>
+    <p class="subtitle">도형들을 자석처럼 붙이며 멋진 작품을 만들어 보아요!</p>
+    <p style="font-size:18px; color:#666;">⚡ 도형이 가까워지면 자석처럼 딱 붙어요!</p>
+
+    <select id="student-select"><option value="">⏳ 학생 명단 불러오는 중...</option></select>
+
+    <button class="btn btn-red" id="btn-start" style="margin-top:15px;">시작하기 🚀</button>
+  </div>
+
+  <!-- Stage 1: Studio -->
+  <div id="screen-studio" class="screen">
+    <div class="studio-layout">
+
+      <!-- Left toolbox -->
+      <div class="toolbox">
+        <div class="tool-section">
+          <h4>🧺 모양 바구니</h4>
+          <div class="shape-grid">
+            <div class="shape-item shape-circle" data-type="circle"></div>
+            <div class="shape-item shape-square" data-type="square"></div>
+            <div class="shape-item shape-triangle" data-type="triangle"></div>
+            <div class="shape-item shape-rect" data-type="rect"></div>
+            <div class="shape-item shape-rtri" data-type="rtri"></div>
+            <div class="shape-item shape-diamond" data-type="diamond"></div>
+          </div>
+          <p style="font-size:11px; color:#888; margin:6px 0 0 0; text-align:center;">눌러서 캔버스로<br>끌어오세요</p>
+        </div>
+
+        <div class="tool-section">
+          <h4>🎨 색깔</h4>
+          <div class="color-grid" id="color-grid">
+            <div class="color-chip selected" style="background:#f9ca24;" data-color="#f9ca24"></div>
+            <div class="color-chip" style="background:#eb4d4b;" data-color="#eb4d4b"></div>
+            <div class="color-chip" style="background:#4a90e2;" data-color="#4a90e2"></div>
+            <div class="color-chip" style="background:#26de81;" data-color="#26de81"></div>
+            <div class="color-chip" style="background:#a55eea;" data-color="#a55eea"></div>
+            <div class="color-chip" style="background:#fc5c65;" data-color="#fc5c65"></div>
+            <div class="color-chip" style="background:#fd9644;" data-color="#fd9644"></div>
+            <div class="color-chip" style="background:#778ca3;" data-color="#778ca3"></div>
+          </div>
+          <p style="font-size:11px; color:#888; margin:6px 0 0 0;">색깔을 고른 뒤 도형을 클릭!</p>
+        </div>
+
+        <div class="tool-section">
+          <h4>🛠️ 선택한 도형</h4>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <button class="action-btn" id="btn-rotate">↻ 돌리기 (45°)</button>
+            <button class="action-btn" id="btn-flip">↪️ 좌우 반전</button>
+            <button class="action-btn" id="btn-bigger">➕ 크게</button>
+            <button class="action-btn" id="btn-smaller">➖ 작게</button>
+            <button class="action-btn" id="btn-duplicate">📋 복제</button>
+            <button class="action-btn danger" id="btn-delete">🗑️ 지우기</button>
+          </div>
+        </div>
+
+        <div class="tool-section">
+          <h4>⚙️ 캔버스 설정</h4>
+          <div class="toggle-row">
+            <span>자석 효과</span>
+            <div class="toggle-switch on" id="toggle-magnet"></div>
+          </div>
+          <div class="toggle-row">
+            <span>격자 보기</span>
+            <div class="toggle-switch" id="toggle-grid"></div>
+          </div>
+          <button class="action-btn danger" id="btn-clear" style="margin-top:8px; width:100%;">🧹 모두 지우기</button>
+        </div>
+
+        <div class="tool-section">
+          <h4>💡 작품 아이디어</h4>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+            <div class="idea-card"><div class="icon">🏠</div><div class="name">집</div></div>
+            <div class="idea-card"><div class="icon">🤖</div><div class="name">로봇</div></div>
+            <div class="idea-card"><div class="icon">🚗</div><div class="name">자동차</div></div>
+            <div class="idea-card"><div class="icon">🌳</div><div class="name">나무</div></div>
+            <div class="idea-card"><div class="icon">🚀</div><div class="name">로켓</div></div>
+            <div class="idea-card"><div class="icon">🐱</div><div class="name">고양이</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas -->
+      <div class="canvas-wrap">
+        <div class="canvas-area" id="canvas-area">
+          <div class="grid-bg" id="grid-bg"></div>
+        </div>
+
+        <div class="bottom-bar">
+          <input type="text" id="artwork-title" placeholder="🎨 작품 이름을 지어주세요!">
+          <button class="btn btn-yellow" id="btn-finish" style="font-size:18px; padding:10px 22px;">완성! 설명하러 가기 ➡️</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 2: Describe -->
+  <div id="screen-describe" class="screen" style="justify-content:center; align-items:center;">
+    <h2>🎨 멋진 작품이 완성됐어요!</h2>
+    <p class="subtitle">작품을 어떻게 만들었는지 설명해보세요!</p>
+
+    <div style="display:flex; gap:25px; align-items:flex-start; max-width:1100px; width:100%;">
+      <div style="flex:1; text-align:center;">
+        <img id="describe-preview" style="max-width:100%; max-height:350px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.15); border:3px solid white;">
+        <p style="font-size:24px; color:var(--primary); margin-top:10px; font-weight:bold;" id="describe-title"></p>
+      </div>
+
+      <div style="flex:1;">
+        <p style="font-size:18px; color:#666; margin-bottom:8px;">💬 어떤 모양들을 사용했나요? 무엇을 만들었나요?</p>
+        <textarea class="stt-text" id="stt-describe" placeholder="🎤 마이크로 녹음하거나 키보드로 직접 써도 돼요!" style="height:140px; font-size:20px;"></textarea>
+        <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+          <button class="mic-btn" id="mic-describe">🔴 녹음 시작</button>
+          <button class="action-btn" id="play-describe" disabled style="font-size:14px; padding:10px 18px;">▶️ 다시 듣기</button>
+        </div>
+        <button class="btn btn-red" id="btn-submit" style="display:none; margin-top:15px;">🚀 제출하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- End -->
+  <div id="screen-end" class="screen" style="justify-content:center; align-items:center;">
+    <h1>🎉 작품 제출 완료! 🎉</h1>
+    <h2 id="end-name"></h2>
+    <img id="artwork-preview" style="display:none;">
+    <p style="font-size:24px;">멋진 작품을 만들어줘서 고마워요!</p>
+    <button class="btn" onclick="location.reload()" style="margin-top:20px;">처음으로 🏠</button>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <h2 style="margin-top:20px;">작품을 저장하는 중...</h2>
+  </div>
+
+</div>
+
+<div id="reward-overlay"></div>
+
+<script>
+// ★★ 메인 앱과 같은 GAS URL 사용 (또는 별도 배포 URL) ★★
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbybYRSpWEnTls7Vo3U2aifzGfbC8KKq6sjoldRSTJ9pL07Vq5AOqiNnmq97XYWNAoW1/exec';
+
+function resizeApp() {
+  const wrapper = document.getElementById('app-wrapper');
+  const w = window.innerWidth, h = window.innerHeight;
+  const scale = Math.min(w/1280, h/820) * 0.95;
+  wrapper.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', resizeApp);
+resizeApp();
+
+// State
+let currentStudent = '';
+let isSpeakerOn = false;
+let recognition;
+let selectedColor = '#f9ca24';
+let selectedEl = null;
+let isMagnetOn = true;
+let isGridOn = false;
+let isRecording = false;
+let mediaRecorder, audioChunks = [], micStream;
+let lastBlobUrl = null;
+let appData = {
+  studentName:'',
+  artworkTitle:'',
+  description:'',
+  audioBase64:'',
+  imageBase64:'',
+  shapeCount:0
+};
+
+// Fallback students
+const fallbackStudents = ['강민재','김서연','박지훈','이하윤','정시우','최유진','강도현','윤서아','임서준','한지은'];
+
+async function loadConfig() {
+  const select = document.getElementById('student-select');
+  const populate = (list) => {
+    select.innerHTML = '<option value="">이름을 선택하세요 👇</option>';
+    list.forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name; opt.textContent = name;
+      select.appendChild(opt);
+    });
+  };
+  if (!GAS_URL || GAS_URL.includes('PASTE')) { populate(fallbackStudents); return; }
+  try {
+    const res = await fetch(GAS_URL);
+    const data = await res.json();
+    populate((data.students && data.students.length) ? data.students : fallbackStudents);
+  } catch (e) { populate(fallbackStudents); }
+}
+loadConfig();
+
+// Audio context
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const initAudioCtx = () => { if (audioCtx.state === 'suspended') audioCtx.resume(); };
+
+const playSnap = () => {
+  if (!isSpeakerOn) return;
+  initAudioCtx();
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.type='sine';
+  osc.frequency.setValueAtTime(880,t);
+  osc.frequency.exponentialRampToValueAtTime(1320,t+0.08);
+  gain.gain.setValueAtTime(0.15,t);
+  gain.gain.exponentialRampToValueAtTime(0.01,t+0.15);
+  osc.start(t); osc.stop(t+0.15);
+};
+const playClick = () => {
+  if (!isSpeakerOn) return;
+  initAudioCtx();
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.type='square';
+  osc.frequency.setValueAtTime(600,t);
+  gain.gain.setValueAtTime(0.1,t);
+  gain.gain.exponentialRampToValueAtTime(0.01,t+0.05);
+  osc.start(t); osc.stop(t+0.05);
+};
+const playChime = () => {
+  if (!isSpeakerOn) return;
+  initAudioCtx();
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.type='sine';
+  osc.frequency.setValueAtTime(523.25,t);
+  osc.frequency.setValueAtTime(659.25,t+0.1);
+  osc.frequency.setValueAtTime(783.99,t+0.2);
+  gain.gain.setValueAtTime(0.2,t);
+  gain.gain.exponentialRampToValueAtTime(0.01,t+1.5);
+  osc.start(t); osc.stop(t+1.5);
+};
+
+// TTS
+const synth = window.speechSynthesis;
+let bestVoice = null;
+function pickBestVoice() {
+  const voices = synth.getVoices();
+  if (!voices.length) return null;
+  let v = voices.find(v => v.lang === 'ko-KR' && v.name.toLowerCase().includes('google') && !v.localService);
+  if (v) return v;
+  v = voices.find(v => v.lang === 'ko-KR' && /wavenet|neural/i.test(v.name));
+  if (v) return v;
+  v = voices.find(v => v.lang === 'ko-KR');
+  return v || null;
+}
+if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => { bestVoice = pickBestVoice(); };
+setTimeout(() => { bestVoice = pickBestVoice(); }, 500);
+
+function speak(text) {
+  if (!text || !isSpeakerOn) return;
+  synth.cancel();
+  if (!bestVoice) bestVoice = pickBestVoice();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR'; u.rate = 0.95; u.pitch = 1.0;
+  if (bestVoice) u.voice = bestVoice;
+  synth.speak(u);
+}
+
+document.getElementById('speaker-toggle').addEventListener('click', () => {
+  isSpeakerOn = !isSpeakerOn;
+  const btn = document.getElementById('speaker-toggle');
+  btn.classList.toggle('on', isSpeakerOn);
+  btn.textContent = isSpeakerOn ? '🔊' : '🔈';
+});
+
+// STT
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'ko-KR';
+  recognition.interimResults = true;
+  recognition.continuous = true;
+}
+
+// Audio recording
+function blobToBase64(blob) {
+  return new Promise((res) => {
+    const r = new FileReader();
+    r.onloadend = () => res(r.result);
+    r.readAsDataURL(blob);
+  });
+}
+
+async function initAudioOnce() {
+  if (mediaRecorder) return true;
+  try {
+    micStream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    mediaRecorder = new MediaRecorder(micStream, { mimeType:'audio/webm' });
+    return true;
+  } catch (err) {
+    alert('마이크 권한이 필요해요!');
+    return false;
+  }
+}
+
+// Color selection
+document.querySelectorAll('.color-chip').forEach(c => {
+  c.addEventListener('click', () => {
+    document.querySelectorAll('.color-chip').forEach(x => x.classList.remove('selected'));
+    c.classList.add('selected');
+    selectedColor = c.dataset.color;
+    // 선택된 도형이 있으면 색깔 적용
+    if (selectedEl) {
+      applyColorToShape(selectedEl, selectedColor);
+      playClick();
+    }
+  });
+});
+
+function applyColorToShape(el, color) {
+  const type = el.dataset.type;
+  if (type === 'circle' || type === 'square' || type === 'rect') {
+    el.style.background = color;
+  } else if (type === 'triangle' || type === 'rtri' || type === 'diamond') {
+    let svg;
+    const enc = encodeURIComponent(color).replace('#','%23');
+    if (type === 'triangle') svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 5,95 95,95" fill="${enc}"/></svg>`;
+    else if (type === 'rtri') svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="5,5 5,95 95,95" fill="${enc}"/></svg>`;
+    else if (type === 'diamond') svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 95,50 50,95 5,50" fill="${enc}"/></svg>`;
+    el.style.backgroundImage = `url('data:image/svg+xml;utf8,${svg.replace(/"/g, "'")}')`;
+  }
+  el.dataset.color = color;
+}
+
+// === Drag & Magnetic Snap ===
+const canvasArea = document.getElementById('canvas-area');
+const SNAP_DISTANCE = 25; // 자석 스냅 거리 (px)
+
+let isDragging = false, dragEl = null;
+let offsetX = 0, offsetY = 0;
+let dragStartTime = 0;
+
+document.querySelectorAll('.shape-item').forEach(item => {
+  item.addEventListener('pointerdown', e => {
+    isDragging = true;
+    dragStartTime = Date.now();
+    const clone = document.createElement('div');
+    clone.className = 'clone-item';
+    clone.dataset.type = item.dataset.type;
+    clone.dataset.rotation = 0;
+    clone.dataset.scale = 1;
+    clone.dataset.scaleX = 1;
+    clone.dataset.color = selectedColor;
+
+    let baseSize = 80;
+    const type = item.dataset.type;
+    let bg = '', extraStyle = '';
+    if (type === 'circle') {
+      bg = `background:${selectedColor}; border-radius:50%;`;
+      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
+    } else if (type === 'square') {
+      bg = `background:${selectedColor};`;
+      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
+    } else if (type === 'rect') {
+      bg = `background:${selectedColor};`;
+      extraStyle = `width:${baseSize*1.4}px; height:${baseSize*0.6}px;`;
+    } else if (type === 'triangle') {
+      const enc = encodeURIComponent(selectedColor).replace('#','%23');
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 5,95 95,95' fill='${enc}'/></svg>`;
+      bg = `background-image:url('data:image/svg+xml;utf8,${svg}'); background-size:contain; background-repeat:no-repeat;`;
+      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
+    } else if (type === 'rtri') {
+      const enc = encodeURIComponent(selectedColor).replace('#','%23');
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='5,5 5,95 95,95' fill='${enc}'/></svg>`;
+      bg = `background-image:url('data:image/svg+xml;utf8,${svg}'); background-size:contain; background-repeat:no-repeat;`;
+      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
+    } else if (type === 'diamond') {
+      const enc = encodeURIComponent(selectedColor).replace('#','%23');
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 95,50 50,95 5,50' fill='${enc}'/></svg>`;
+      bg = `background-image:url('data:image/svg+xml;utf8,${svg}'); background-size:contain; background-repeat:no-repeat;`;
+      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
+    }
+    clone.style.cssText = bg + extraStyle;
+
+    const rect = canvasArea.getBoundingClientRect();
+    let w = parseFloat(extraStyle.match(/width:(\d+\.?\d*)/)[1]);
+    let h = parseFloat(extraStyle.match(/height:(\d+\.?\d*)/)[1]);
+    clone.style.left = (e.clientX - rect.left - w/2) + 'px';
+    clone.style.top = (e.clientY - rect.top - h/2) + 'px';
+    canvasArea.appendChild(clone);
+    offsetX = w/2; offsetY = h/2;
+    dragEl = clone;
+
+    // Select
+    document.querySelectorAll('.clone-item').forEach(c => { c.style.zIndex=1; c.classList.remove('selected'); });
+    clone.style.zIndex = 100;
+    clone.classList.add('selected');
+    selectedEl = clone;
+
+    setupCloneInteraction(clone);
+    e.stopPropagation();
+  });
+});
+
+function setupCloneInteraction(el) {
+  el.addEventListener('pointerdown', e => {
+    isDragging = true;
+    dragEl = el;
+    dragStartTime = Date.now();
+    const rect = el.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    document.querySelectorAll('.clone-item').forEach(c => { c.style.zIndex=1; c.classList.remove('selected'); });
+    el.style.zIndex = 100;
+    el.classList.add('selected');
+    selectedEl = el;
+    e.stopPropagation();
+  });
+}
+
+canvasArea.addEventListener('pointerdown', e => {
+  if (e.target === canvasArea || e.target.classList.contains('grid-bg')) {
+    document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
+    selectedEl = null;
+  }
+});
+
+document.addEventListener('pointermove', e => {
+  if (!isDragging || !dragEl) return;
+  const rect = canvasArea.getBoundingClientRect();
+  let x = e.clientX - rect.left - offsetX;
+  let y = e.clientY - rect.top - offsetY;
+
+  // 자석 스냅: 다른 도형의 가장자리에 가까워지면 딱 붙음
+  if (isMagnetOn) {
+    const myRect = dragEl.getBoundingClientRect();
+    const myW = myRect.width, myH = myRect.height;
+    const myLeft = x, myTop = y;
+    const myRight = x + myW, myBottom = y + myH;
+    const myCx = x + myW/2, myCy = y + myH/2;
+
+    let snapX = null, snapY = null;
+    let isSnapping = false;
+
+    document.querySelectorAll('.clone-item').forEach(other => {
+      if (other === dragEl) return;
+      const oRect = other.getBoundingClientRect();
+      const oLeft = oRect.left - rect.left;
+      const oTop = oRect.top - rect.top;
+      const oRight = oLeft + oRect.width;
+      const oBottom = oTop + oRect.height;
+      const oCx = oLeft + oRect.width/2;
+      const oCy = oTop + oRect.height/2;
+
+      // 좌우 변 스냅
+      if (Math.abs(myRight - oLeft) < SNAP_DISTANCE && rangesOverlap(myTop, myBottom, oTop-15, oBottom+15)) {
+        snapX = oLeft - myW; isSnapping = true;
+      }
+      else if (Math.abs(myLeft - oRight) < SNAP_DISTANCE && rangesOverlap(myTop, myBottom, oTop-15, oBottom+15)) {
+        snapX = oRight; isSnapping = true;
+      }
+      // 위아래 변 스냅
+      if (Math.abs(myBottom - oTop) < SNAP_DISTANCE && rangesOverlap(myLeft, myRight, oLeft-15, oRight+15)) {
+        snapY = oTop - myH; isSnapping = true;
+      }
+      else if (Math.abs(myTop - oBottom) < SNAP_DISTANCE && rangesOverlap(myLeft, myRight, oLeft-15, oRight+15)) {
+        snapY = oBottom; isSnapping = true;
+      }
+      // 같은 변 정렬 스냅
+      if (Math.abs(myLeft - oLeft) < SNAP_DISTANCE) { snapX = oLeft; isSnapping = true; }
+      else if (Math.abs(myRight - oRight) < SNAP_DISTANCE) { snapX = oRight - myW; isSnapping = true; }
+      if (Math.abs(myTop - oTop) < SNAP_DISTANCE) { snapY = oTop; isSnapping = true; }
+      else if (Math.abs(myBottom - oBottom) < SNAP_DISTANCE) { snapY = oBottom - myH; isSnapping = true; }
+      // 중앙 정렬 스냅
+      if (Math.abs(myCx - oCx) < SNAP_DISTANCE) { snapX = oCx - myW/2; isSnapping = true; }
+      if (Math.abs(myCy - oCy) < SNAP_DISTANCE) { snapY = oCy - myH/2; isSnapping = true; }
+    });
+
+    if (snapX !== null) x = snapX;
+    if (snapY !== null) y = snapY;
+
+    if (isSnapping) {
+      if (!dragEl.dataset.snapping) {
+        dragEl.classList.add('snapping');
+        dragEl.dataset.snapping = '1';
+        playSnap();
+        showMagnetPulse(x + myW/2, y + myH/2);
+      }
+    } else {
+      dragEl.classList.remove('snapping');
+      delete dragEl.dataset.snapping;
+    }
+  }
+
+  dragEl.style.left = x + 'px';
+  dragEl.style.top = y + 'px';
+});
+
+function rangesOverlap(a1, a2, b1, b2) {
+  return !(a2 < b1 || b2 < a1);
+}
+
+function showMagnetPulse(x, y) {
+  const pulse = document.createElement('div');
+  pulse.className = 'magnet-pulse';
+  pulse.style.left = x + 'px';
+  pulse.style.top = y + 'px';
+  canvasArea.appendChild(pulse);
+  setTimeout(() => pulse.remove(), 600);
+}
+
+document.addEventListener('pointerup', () => {
+  if (isDragging && dragEl) {
+    dragEl.classList.remove('snapping');
+    delete dragEl.dataset.snapping;
+    isDragging = false; dragEl = null;
+  }
+});
+
+// Transform helpers
+function applyTransform(el) {
+  const r = parseFloat(el.dataset.rotation || 0);
+  const s = parseFloat(el.dataset.scale || 1);
+  const sx = parseFloat(el.dataset.scaleX || 1);
+  el.style.transform = `rotate(${r}deg) scale(${s * sx}, ${s})`;
+}
+
+document.getElementById('btn-rotate').addEventListener('click', () => {
+  if (!selectedEl) return;
+  let r = (parseInt(selectedEl.dataset.rotation || 0) + 45) % 360;
+  selectedEl.dataset.rotation = r; applyTransform(selectedEl); playClick();
+});
+document.getElementById('btn-flip').addEventListener('click', () => {
+  if (!selectedEl) return;
+  let sx = parseFloat(selectedEl.dataset.scaleX || 1) * -1;
+  selectedEl.dataset.scaleX = sx; applyTransform(selectedEl); playClick();
+});
+document.getElementById('btn-bigger').addEventListener('click', () => {
+  if (!selectedEl) return;
+  let s = Math.min(2.5, parseFloat(selectedEl.dataset.scale || 1) * 1.15);
+  selectedEl.dataset.scale = s; applyTransform(selectedEl); playClick();
+});
+document.getElementById('btn-smaller').addEventListener('click', () => {
+  if (!selectedEl) return;
+  let s = Math.max(0.3, parseFloat(selectedEl.dataset.scale || 1) / 1.15);
+  selectedEl.dataset.scale = s; applyTransform(selectedEl); playClick();
+});
+document.getElementById('btn-duplicate').addEventListener('click', () => {
+  if (!selectedEl) return;
+  const clone = selectedEl.cloneNode(true);
+  clone.classList.remove('selected');
+  clone.style.left = (parseFloat(selectedEl.style.left) + 30) + 'px';
+  clone.style.top = (parseFloat(selectedEl.style.top) + 30) + 'px';
+  canvasArea.appendChild(clone);
+  setupCloneInteraction(clone);
+  document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
+  clone.classList.add('selected');
+  selectedEl = clone;
+  playClick();
+});
+document.getElementById('btn-delete').addEventListener('click', () => {
+  if (!selectedEl) return;
+  selectedEl.remove(); selectedEl = null; playClick();
+});
+document.getElementById('btn-clear').addEventListener('click', () => {
+  if (confirm('정말 모두 지울까요?')) {
+    document.querySelectorAll('.clone-item').forEach(c => c.remove());
+    selectedEl = null; playClick();
+  }
+});
+
+// Toggles
+document.getElementById('toggle-magnet').addEventListener('click', () => {
+  isMagnetOn = !isMagnetOn;
+  document.getElementById('toggle-magnet').classList.toggle('on', isMagnetOn);
+  playClick();
+});
+document.getElementById('toggle-grid').addEventListener('click', () => {
+  isGridOn = !isGridOn;
+  document.getElementById('toggle-grid').classList.toggle('on', isGridOn);
+  document.getElementById('grid-bg').classList.toggle('show', isGridOn);
+  playClick();
+});
+
+// Idea cards
+document.querySelectorAll('.idea-card').forEach(c => {
+  c.addEventListener('click', () => {
+    const name = c.querySelector('.name').innerText;
+    const titleInput = document.getElementById('artwork-title');
+    titleInput.value = name;
+    speak(`${name} 만들기에 도전해보세요!`);
+    playClick();
+  });
+});
+
+// Start
+document.getElementById('btn-start').addEventListener('click', async () => {
+  initAudioCtx();
+  const sel = document.getElementById('student-select');
+  if (!sel.value) return alert('이름을 선택해주세요!');
+  currentStudent = sel.value;
+  appData.studentName = currentStudent;
+
+  const ok = await initAudioOnce();
+  if (!ok) return;
+  if (recognition) {
+    try { recognition.start(); setTimeout(() => recognition.stop(), 500); } catch(e){}
+  }
+  showScreen('screen-studio');
+});
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// Finish (capture canvas)
+document.getElementById('btn-finish').addEventListener('click', async () => {
+  const shapes = document.querySelectorAll('.clone-item');
+  if (shapes.length === 0) {
+    alert('도형을 1개 이상 추가해주세요!');
+    return;
+  }
+  const title = document.getElementById('artwork-title').value || '(제목 없음)';
+  appData.artworkTitle = title;
+  appData.shapeCount = shapes.length;
+
+  document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
+  const canvas = await html2canvas(canvasArea, { backgroundColor:'#ffffff' });
+  appData.imageBase64 = canvas.toDataURL('image/png');
+
+  document.getElementById('describe-preview').src = appData.imageBase64;
+  document.getElementById('describe-title').innerText = '"' + title + '"';
+  showScreen('screen-describe');
+});
+
+// Describe recording
+const descTextarea = document.getElementById('stt-describe');
+const descMicBtn = document.getElementById('mic-describe');
+const descPlayBtn = document.getElementById('play-describe');
+const submitBtn = document.getElementById('btn-submit');
+
+descTextarea.addEventListener('input', () => {
+  if (descTextarea.value.trim().length > 0) submitBtn.style.display = 'inline-flex';
+});
+
+descPlayBtn.addEventListener('click', () => {
+  if (lastBlobUrl) new Audio(lastBlobUrl).play();
+});
+
+descMicBtn.addEventListener('click', async () => {
+  if (!mediaRecorder) {
+    const ok = await initAudioOnce();
+    if (!ok) return;
+  }
+
+  if (!isRecording) {
+    isRecording = true;
+    audioChunks = [];
+    let existing = descTextarea.value.trim();
+    if (existing !== '') existing += ' \n';
+
+    descMicBtn.classList.add('recording');
+    descMicBtn.innerHTML = '🟥 녹음 종료';
+    descTextarea.classList.add('recording');
+
+    if (recognition) {
+      recognition.onresult = (event) => {
+        let curr = '';
+        for (let i = 0; i < event.results.length; i++) {
+          curr += event.results[i][0].transcript + (event.results[i].isFinal ? ' ' : '');
+        }
+        descTextarea.value = existing + curr;
+      };
+      try { recognition.start(); } catch(e){}
+    }
+
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.start();
+
+  } else {
+    isRecording = false;
+    descMicBtn.classList.remove('recording');
+    descMicBtn.innerHTML = '🔴 다시 녹음';
+    descTextarea.classList.remove('recording');
+
+    if (recognition) {
+      try { recognition.stop(); } catch(e){}
+      recognition.onresult = null;
+    }
+
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(audioChunks, { type:'audio/webm' });
+      const base64 = await blobToBase64(blob);
+      lastBlobUrl = URL.createObjectURL(blob);
+      descPlayBtn.disabled = false;
+
+      let finalVal = descTextarea.value.trim();
+      if (finalVal === '') finalVal = '(내용 없음)';
+      descTextarea.value = finalVal;
+
+      appData.description = finalVal;
+      appData.audioBase64 = base64;
+      submitBtn.style.display = 'inline-flex';
+    };
+    mediaRecorder.stop();
+  }
+});
+
+// Submit
+submitBtn.addEventListener('click', async () => {
+  appData.description = descTextarea.value.trim();
+  if (!appData.description) appData.description = '(설명 없음)';
+
+  if (!GAS_URL || GAS_URL.includes('PASTE')) {
+    alert('GAS_URL이 설정되지 않았어요.');
+    return;
+  }
+
+  document.getElementById('loading').style.display = 'flex';
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method:'POST',
+      body:JSON.stringify({ ...appData, source:'studio' }),
+      headers:{ 'Content-Type':'text/plain' }
+    });
+    let result;
+    try { result = await res.json(); } catch { result = { status:'success' }; }
+    document.getElementById('loading').style.display = 'none';
+
+    document.getElementById('end-name').innerText = appData.studentName + ' 학생';
+    const img = document.getElementById('artwork-preview');
+    img.src = appData.imageBase64;
+    img.style.display = 'block';
+    showScreen('screen-end');
+    showRewardConfetti();
+    setTimeout(showRewardConfetti, 800);
+    playChime();
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    console.error(err);
+    document.getElementById('end-name').innerText = appData.studentName + ' 학생';
+    showScreen('screen-end');
+  }
+});
+
+function showRewardConfetti() {
+  const overlay = document.getElementById('reward-overlay');
+  overlay.style.display = 'block';
+  overlay.innerHTML = '';
+  const items = ['🌟','💖','🌈','🎉','✨','⭐','🦄','🏆'];
+  for (let i = 0; i < 18; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + '%';
+    c.style.top = '-50px';
+    c.style.animationDelay = (Math.random() * 0.5) + 's';
+    c.innerText = items[Math.floor(Math.random() * items.length)];
+    overlay.appendChild(c);
+  }
+  setTimeout(() => { overlay.style.display = 'none'; }, 3000);
+}
+
+</script>
+</body>
+</html>
