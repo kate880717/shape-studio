@@ -80,17 +80,18 @@
   .studio-layout { display:flex; gap:15px; flex:1; min-height:0; }
 
   .toolbox {
-    width:240px; background:rgba(255,255,255,0.85); border-radius:20px;
-    padding:15px; display:flex; flex-direction:column; gap:12px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.08); overflow-y:auto;
+    width:210px; background:rgba(255,255,255,0.85); border-radius:20px;
+    padding:12px; display:flex; flex-direction:column; gap:8px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08); overflow:hidden;
   }
-  .tool-section { border-bottom:2px dashed #eee; padding-bottom:12px; }
-  .tool-section:last-child { border-bottom:none; }
-  .tool-section h4 { margin:0 0 10px 0; font-size:15px; color:#666; text-align:center; }
+  .tool-section { border-bottom:2px dashed #eee; padding-bottom:8px; }
+  .tool-section:last-child { border-bottom:none; padding-bottom:0; }
+  .tool-section h4 { margin:0 0 6px 0; font-size:14px; color:#666; text-align:center; }
 
-  /* 모양 바구니 (3가지) */
+  /* 모양 바구니 (3가지) - 가로 배치, 작게 */
   .shape-grid {
-    display:flex; flex-direction:column; gap:12px; align-items:center;
+    display:flex; flex-direction:row; gap:8px;
+    align-items:center; justify-content:center;
   }
   .shape-item {
     position:relative; cursor:grab; flex-shrink:0;
@@ -99,64 +100,67 @@
   .shape-item:hover { transform:scale(1.1); }
   .shape-item:active { cursor:grabbing; }
 
-  /* 도형 정의 (단순화 - 처음 주신 방식 채택) */
+  /* 도형 정의 - 작게 */
   .shape-circle {
-    width:75px; height:75px; border-radius:50%;
+    width:50px; height:50px; border-radius:50%;
     background:var(--circle-color);
   }
   .shape-square {
-    width:75px; height:75px;
+    width:50px; height:50px;
     background:var(--square-color);
   }
   .shape-triangle {
-    width:75px; height:75px;
+    width:50px; height:50px;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,0 0,100 100,100' fill='%23d63031'/></svg>");
     background-size:contain; background-repeat:no-repeat; background-position:center;
   }
 
   .palette-help {
-    font-size:12px; color:#888; text-align:center; margin:0;
-    line-height:1.4; font-weight:bold;
+    font-size:11px; color:#888; text-align:center; margin:4px 0 0 0;
+    font-weight:bold; white-space:nowrap;
   }
 
-  /* 색깔 변경 */
-  .color-grid { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+  /* 색깔 변경 - 한 줄 */
+  .color-grid { display:flex; gap:5px; flex-wrap:nowrap; justify-content:center; }
   .color-chip {
-    width:30px; height:30px; border-radius:50%; cursor:pointer;
-    border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.15);
-    transition:transform 0.2s;
+    width:22px; height:22px; border-radius:50%; cursor:pointer;
+    border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.15);
+    transition:transform 0.2s; flex-shrink:0;
   }
   .color-chip:hover { transform:scale(1.2); }
-  .color-chip.selected { border-color:#333; transform:scale(1.2); }
+  .color-chip.selected { border-color:#333; transform:scale(1.25); }
 
-  /* 액션 버튼 */
+  /* 액션 버튼 - 2x3 그리드 */
+  .action-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:5px;
+  }
   .action-btn {
-    padding:9px 12px; border-radius:10px; border:none; font-size:14px;
+    padding:7px 4px; border-radius:8px; border:none; font-size:13px;
     font-weight:bold; cursor:pointer; background:#f1f2f6;
-    display:flex; align-items:center; justify-content:center; gap:5px;
-    transition:all 0.15s; font-family:'Jua',sans-serif; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:3px;
+    transition:all 0.15s; font-family:'Jua',sans-serif;
   }
   .action-btn:hover { background:#dfe4ea; }
   .action-btn:active { transform:scale(0.95); }
   .action-btn.danger { background:#ff7675; color:white; }
-  .action-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .action-btn.full { grid-column:1 / -1; }
 
   /* Toggle */
   .toggle-row {
     display:flex; align-items:center; justify-content:space-between;
-    padding:5px 0; font-size:14px;
+    padding:3px 0; font-size:13px;
   }
   .toggle-switch {
-    position:relative; width:38px; height:22px; background:#ccc;
+    position:relative; width:34px; height:20px; background:#ccc;
     border-radius:20px; cursor:pointer; transition:all 0.2s; flex-shrink:0;
   }
   .toggle-switch.on { background:var(--secondary); }
   .toggle-switch::after {
     content:''; position:absolute; top:3px; left:3px;
-    width:16px; height:16px; background:white; border-radius:50%;
+    width:14px; height:14px; background:white; border-radius:50%;
     transition:all 0.2s;
   }
-  .toggle-switch.on::after { left:19px; }
+  .toggle-switch.on::after { left:17px; }
 
   /* Canvas */
   .canvas-wrap { flex:1; display:flex; flex-direction:column; min-width:0; }
@@ -289,29 +293,28 @@
             <div class="shape-item shape-triangle" data-type="triangle"></div>
             <div class="shape-item shape-square" data-type="square"></div>
           </div>
-          <p class="palette-help" style="margin-top:10px;">눌러서 캔버스로<br>끌어오세요</p>
+          <p class="palette-help">눌러서 캔버스로 끌어오기</p>
         </div>
 
         <div class="tool-section">
-          <h4>🎨 색깔 바꾸기</h4>
+          <h4>🎨 색깔</h4>
           <div class="color-grid" id="color-grid">
             <div class="color-chip" style="background:#fdcb6e;" data-color="#fdcb6e"></div>
             <div class="color-chip" style="background:#d63031;" data-color="#d63031"></div>
             <div class="color-chip" style="background:#0984e3;" data-color="#0984e3"></div>
             <div class="color-chip" style="background:#26de81;" data-color="#26de81"></div>
             <div class="color-chip" style="background:#a55eea;" data-color="#a55eea"></div>
-            <div class="color-chip" style="background:#fc5c65;" data-color="#fc5c65"></div>
             <div class="color-chip" style="background:#fd9644;" data-color="#fd9644"></div>
             <div class="color-chip" style="background:#778ca3;" data-color="#778ca3"></div>
           </div>
-          <p class="palette-help" style="margin-top:8px;">도형 선택 후<br>색깔을 클릭!</p>
+          <p class="palette-help">도형 선택 후 색깔 클릭</p>
         </div>
 
         <div class="tool-section">
           <h4>🛠️ 선택한 도형</h4>
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <button class="action-btn" id="btn-rotate">↻ 돌리기 (45°)</button>
-            <button class="action-btn" id="btn-flip">↪️ 좌우 반전</button>
+          <div class="action-grid">
+            <button class="action-btn" id="btn-rotate">↻ 돌리기</button>
+            <button class="action-btn" id="btn-flip">↪️ 반전</button>
             <button class="action-btn" id="btn-bigger">➕ 크게</button>
             <button class="action-btn" id="btn-smaller">➖ 작게</button>
             <button class="action-btn" id="btn-duplicate">📋 복제</button>
@@ -320,16 +323,15 @@
         </div>
 
         <div class="tool-section">
-          <h4>⚙️ 설정</h4>
           <div class="toggle-row">
-            <span>🧲 자석 효과</span>
+            <span>🧲 자석</span>
             <div class="toggle-switch on" id="toggle-magnet"></div>
           </div>
           <div class="toggle-row">
-            <span>📐 격자 보기</span>
+            <span>📐 격자</span>
             <div class="toggle-switch" id="toggle-grid"></div>
           </div>
-          <button class="action-btn danger" id="btn-clear" style="margin-top:8px;">🧹 모두 지우기</button>
+          <button class="action-btn danger full" id="btn-clear" style="margin-top:5px;">🧹 모두 지우기</button>
         </div>
       </div>
 
