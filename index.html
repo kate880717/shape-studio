@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>모양 만들기 스튜디오 ✨</title>
+<title>모양 만들기 스튜디오</title>
 <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
@@ -32,7 +32,6 @@
     display:flex; flex-direction:column; overflow:hidden;
   }
 
-  /* Header */
   header {
     height:75px; background:rgba(255,255,255,0.7);
     display:flex; justify-content:space-between; align-items:center;
@@ -45,7 +44,6 @@
   }
   .speaker-btn.on { background:var(--primary); color:white; }
 
-  /* Screens */
   .screen {
     flex:1; display:none; flex-direction:column; padding:20px 30px;
     overflow:hidden; animation:fadeIn 0.5s ease;
@@ -56,12 +54,11 @@
   h2 { font-size:30px; color:#333; margin:0 0 15px 0; text-align:center; }
   .subtitle { font-size:20px; color:#666; text-align:center; margin-bottom:15px; }
 
-  /* Buttons */
   .btn {
     padding:12px 30px; font-size:22px; border:none; border-radius:50px;
     background:var(--secondary); color:white; cursor:pointer;
     box-shadow:0 8px 18px rgba(78,205,196,0.3); transition:all 0.2s;
-    display:inline-flex; align-items:center; gap:8px;
+    display:inline-flex; align-items:center; gap:8px; font-family:'Jua',sans-serif;
   }
   .btn:hover { transform:translateY(-2px); }
   .btn-red { background:var(--primary); box-shadow:0 8px 18px rgba(255,107,107,0.3); }
@@ -80,17 +77,17 @@
   .studio-layout { display:flex; gap:15px; flex:1; min-height:0; }
 
   .toolbox {
-    width:210px; background:rgba(255,255,255,0.85); border-radius:20px;
-    padding:12px; display:flex; flex-direction:column; gap:8px;
+    width:240px; background:rgba(255,255,255,0.85); border-radius:20px;
+    padding:15px; display:flex; flex-direction:column; gap:10px;
     box-shadow:0 10px 25px rgba(0,0,0,0.08); overflow:hidden;
   }
-  .tool-section { border-bottom:2px dashed #eee; padding-bottom:8px; }
+  .tool-section { border-bottom:2px dashed #eee; padding-bottom:10px; }
   .tool-section:last-child { border-bottom:none; padding-bottom:0; }
-  .tool-section h4 { margin:0 0 6px 0; font-size:14px; color:#666; text-align:center; }
+  .tool-section h4 { margin:0 0 8px 0; font-size:16px; color:#444; text-align:center; font-weight:bold; }
 
-  /* 모양 바구니 (3가지) - 가로 배치, 작게 */
+  /* 모양 바구니 - 가로 배치, 적당한 크기 */
   .shape-grid {
-    display:flex; flex-direction:row; gap:8px;
+    display:flex; flex-direction:row; gap:12px;
     align-items:center; justify-content:center;
   }
   .shape-item {
@@ -100,67 +97,49 @@
   .shape-item:hover { transform:scale(1.1); }
   .shape-item:active { cursor:grabbing; }
 
-  /* 도형 정의 - 작게 */
   .shape-circle {
-    width:50px; height:50px; border-radius:50%;
+    width:55px; height:55px; border-radius:50%;
     background:var(--circle-color);
   }
   .shape-square {
-    width:50px; height:50px;
+    width:55px; height:55px;
     background:var(--square-color);
   }
   .shape-triangle {
-    width:50px; height:50px;
+    width:55px; height:55px;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,0 0,100 100,100' fill='%23d63031'/></svg>");
     background-size:contain; background-repeat:no-repeat; background-position:center;
   }
 
   .palette-help {
-    font-size:11px; color:#888; text-align:center; margin:4px 0 0 0;
-    font-weight:bold; white-space:nowrap;
+    font-size:13px; color:#888; text-align:center; margin:6px 0 0 0;
+    font-weight:bold; line-height:1.3;
   }
 
-  /* 색깔 변경 - 한 줄 */
-  .color-grid { display:flex; gap:5px; flex-wrap:nowrap; justify-content:center; }
+  /* 색깔 - 한 줄 */
+  .color-grid { display:flex; gap:6px; flex-wrap:nowrap; justify-content:center; }
   .color-chip {
-    width:22px; height:22px; border-radius:50%; cursor:pointer;
+    width:24px; height:24px; border-radius:50%; cursor:pointer;
     border:2px solid white; box-shadow:0 2px 4px rgba(0,0,0,0.15);
     transition:transform 0.2s; flex-shrink:0;
   }
   .color-chip:hover { transform:scale(1.2); }
   .color-chip.selected { border-color:#333; transform:scale(1.25); }
 
-  /* 액션 버튼 - 2x3 그리드 */
+  /* 액션 버튼 - 2x2 그리드 */
   .action-grid {
-    display:grid; grid-template-columns:1fr 1fr; gap:5px;
+    display:grid; grid-template-columns:1fr 1fr; gap:6px;
   }
   .action-btn {
-    padding:7px 4px; border-radius:8px; border:none; font-size:13px;
+    padding:9px 6px; border-radius:10px; border:none; font-size:14px;
     font-weight:bold; cursor:pointer; background:#f1f2f6;
-    display:flex; align-items:center; justify-content:center; gap:3px;
+    display:flex; align-items:center; justify-content:center; gap:4px;
     transition:all 0.15s; font-family:'Jua',sans-serif;
   }
   .action-btn:hover { background:#dfe4ea; }
   .action-btn:active { transform:scale(0.95); }
   .action-btn.danger { background:#ff7675; color:white; }
-  .action-btn.full { grid-column:1 / -1; }
-
-  /* Toggle */
-  .toggle-row {
-    display:flex; align-items:center; justify-content:space-between;
-    padding:3px 0; font-size:13px;
-  }
-  .toggle-switch {
-    position:relative; width:34px; height:20px; background:#ccc;
-    border-radius:20px; cursor:pointer; transition:all 0.2s; flex-shrink:0;
-  }
-  .toggle-switch.on { background:var(--secondary); }
-  .toggle-switch::after {
-    content:''; position:absolute; top:3px; left:3px;
-    width:14px; height:14px; background:white; border-radius:50%;
-    transition:all 0.2s;
-  }
-  .toggle-switch.on::after { left:17px; }
+  .action-btn.full { grid-column:1 / -1; padding:10px; }
 
   /* Canvas */
   .canvas-wrap { flex:1; display:flex; flex-direction:column; min-width:0; }
@@ -170,37 +149,44 @@
     border:3px solid var(--secondary); min-height:0;
     touch-action:none;
   }
-  .grid-bg {
-    position:absolute; inset:0;
-    background-image:
-      linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px);
-    background-size:30px 30px; pointer-events:none; opacity:0;
-    transition:opacity 0.3s;
-  }
-  .grid-bg.show { opacity:1; }
 
   .clone-item {
     position:absolute; touch-action:none;
     transform-origin:center center;
-    transition:filter 0.15s;
   }
-  .clone-item.snapping { filter:drop-shadow(0 0 12px var(--accent)); }
   .clone-item.selected {
     outline:4px dashed var(--primary); z-index:101 !important;
     filter:drop-shadow(0 0 10px rgba(255,107,107,0.5));
   }
 
-  .magnet-pulse {
-    position:absolute; width:30px; height:30px;
-    border:3px solid var(--accent); border-radius:50%;
+  /* 회전 핸들 (원본 코드 방식) */
+  .rotate-handle {
+    position:absolute; top:-32px; left:50%;
+    transform:translateX(-50%);
+    width:32px; height:32px; background:#fff;
+    border:3px solid var(--primary); border-radius:50%;
+    cursor:grab; display:none; z-index:102;
+  }
+  .rotate-handle::after {
+    content:'↻'; position:absolute; top:50%; left:50%;
     transform:translate(-50%,-50%);
-    animation:magnetPulse 0.6s ease-out; pointer-events:none; z-index:200;
+    font-size:18px; color:var(--primary); font-weight:bold;
   }
-  @keyframes magnetPulse {
-    0% { transform:translate(-50%,-50%) scale(0.3); opacity:1; }
-    100% { transform:translate(-50%,-50%) scale(2); opacity:0; }
+  .clone-item.selected .rotate-handle { display:block; }
+
+  /* 크기조절 핸들 */
+  .resize-handle {
+    position:absolute; bottom:-12px; right:-12px;
+    width:28px; height:28px; background:#fff;
+    border:3px solid var(--secondary); border-radius:50%;
+    cursor:nwse-resize; display:none; z-index:102;
   }
+  .resize-handle::after {
+    content:'⤢'; position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    font-size:14px; color:var(--secondary); font-weight:bold;
+  }
+  .clone-item.selected .resize-handle { display:block; }
 
   /* Bottom bar */
   .bottom-bar {
@@ -224,7 +210,7 @@
     padding:10px 18px; border-radius:50px; border:none;
     background:var(--primary); color:white; font-size:16px; font-weight:bold;
     cursor:pointer; box-shadow:0 5px 12px rgba(255,107,107,0.4);
-    transition:all 0.2s;
+    transition:all 0.2s; font-family:'Jua',sans-serif;
   }
   .mic-btn.recording { animation:pulse 1.5s infinite; background:#c23616; }
   @keyframes pulse {
@@ -233,7 +219,6 @@
     100% { transform:scale(1); box-shadow:0 0 0 0 rgba(255,107,107,0); }
   }
 
-  /* End */
   #screen-end { justify-content:center; align-items:center; }
   #screen-end h1 { font-size:50px; color:var(--primary); }
   #artwork-preview {
@@ -241,7 +226,6 @@
     box-shadow:0 10px 30px rgba(0,0,0,0.15); margin:15px 0;
   }
 
-  /* Loading */
   #loading {
     position:fixed; top:0; left:0; width:100%; height:100%;
     background:rgba(255,255,255,0.85); backdrop-filter:blur(5px);
@@ -250,7 +234,6 @@
   .spinner { width:70px; height:70px; border:8px solid #f3f3f3; border-top:8px solid var(--primary); border-radius:50%; animation:spin 1s linear infinite; }
   @keyframes spin { 0%{transform:rotate(0);} 100%{transform:rotate(360deg);} }
 
-  /* Confetti */
   #reward-overlay {
     position:fixed; top:0; left:0; width:100%; height:100%;
     pointer-events:none; z-index:300; display:none;
@@ -271,20 +254,19 @@
     <button class="speaker-btn" id="speaker-toggle">🔈</button>
   </header>
 
-  <!-- Stage 0: Start -->
+  <!-- Start -->
   <div id="screen-start" class="screen active">
     <h1>🎨 모양 만들기 스튜디오</h1>
-    <p class="subtitle">도형들을 자석처럼 붙이며 멋진 작품을 만들어 보아요!</p>
-    <p style="font-size:18px; color:#666;">⚡ 도형이 가까워지면 자석처럼 딱 붙어요!</p>
+    <p class="subtitle">도형을 끌어와 작품을 만들어 보아요!</p>
+    <p style="font-size:18px; color:#666;">🎯 도형을 자유롭게 회전·크기조절·이동할 수 있어요</p>
     <select id="student-select"><option value="">⏳ 학생 명단 불러오는 중...</option></select>
     <button class="btn btn-red" id="btn-start" style="margin-top:15px;">시작하기 🚀</button>
   </div>
 
-  <!-- Stage 1: Studio -->
+  <!-- Studio -->
   <div id="screen-studio" class="screen">
     <div class="studio-layout">
 
-      <!-- 도구함 -->
       <div class="toolbox">
         <div class="tool-section">
           <h4>🧺 모양 바구니</h4>
@@ -297,8 +279,8 @@
         </div>
 
         <div class="tool-section">
-          <h4>🎨 색깔</h4>
-          <div class="color-grid" id="color-grid">
+          <h4>🎨 색깔 바꾸기</h4>
+          <div class="color-grid">
             <div class="color-chip" style="background:#fdcb6e;" data-color="#fdcb6e"></div>
             <div class="color-chip" style="background:#d63031;" data-color="#d63031"></div>
             <div class="color-chip" style="background:#0984e3;" data-color="#0984e3"></div>
@@ -311,35 +293,29 @@
         </div>
 
         <div class="tool-section">
-          <h4>🛠️ 선택한 도형</h4>
-          <div class="action-grid">
-            <button class="action-btn" id="btn-rotate">↻ 돌리기</button>
-            <button class="action-btn" id="btn-flip">↪️ 반전</button>
-            <button class="action-btn" id="btn-bigger">➕ 크게</button>
-            <button class="action-btn" id="btn-smaller">➖ 작게</button>
-            <button class="action-btn" id="btn-duplicate">📋 복제</button>
-            <button class="action-btn danger" id="btn-delete">🗑️ 지우기</button>
-          </div>
+          <h4>💡 사용 방법</h4>
+          <p style="font-size:13px; color:#555; line-height:1.5; margin:0; padding:0 4px;">
+            • 도형을 끌어 캔버스로<br>
+            • <b style="color:var(--primary);">↻ 빨간 핸들</b>로 자유 회전<br>
+            • <b style="color:var(--secondary);">⤢ 청록 핸들</b>로 크기조절<br>
+            • 도형 클릭으로 선택
+          </p>
         </div>
 
         <div class="tool-section">
-          <div class="toggle-row">
-            <span>🧲 자석</span>
-            <div class="toggle-switch on" id="toggle-magnet"></div>
+          <h4>🛠️ 선택한 도형</h4>
+          <div class="action-grid">
+            <button class="action-btn" id="btn-rotate">↻ 45° 돌리기</button>
+            <button class="action-btn" id="btn-flip">↪️ 좌우 반전</button>
+            <button class="action-btn" id="btn-duplicate">📋 복제하기</button>
+            <button class="action-btn danger" id="btn-delete">🗑️ 지우기</button>
+            <button class="action-btn danger full" id="btn-clear">🧹 모두 지우기</button>
           </div>
-          <div class="toggle-row">
-            <span>📐 격자</span>
-            <div class="toggle-switch" id="toggle-grid"></div>
-          </div>
-          <button class="action-btn danger full" id="btn-clear" style="margin-top:5px;">🧹 모두 지우기</button>
         </div>
       </div>
 
-      <!-- Canvas -->
       <div class="canvas-wrap">
-        <div class="canvas-area" id="canvas-area">
-          <div class="grid-bg" id="grid-bg"></div>
-        </div>
+        <div class="canvas-area" id="canvas-area"></div>
 
         <div class="bottom-bar">
           <input type="text" id="artwork-title" placeholder="🎨 작품 이름을 지어주세요!">
@@ -349,7 +325,7 @@
     </div>
   </div>
 
-  <!-- Stage 2: Describe -->
+  <!-- Describe -->
   <div id="screen-describe" class="screen" style="justify-content:center; align-items:center;">
     <h2>🎨 멋진 작품이 완성됐어요!</h2>
     <p class="subtitle">작품을 어떻게 만들었는지 설명해보세요!</p>
@@ -363,7 +339,7 @@
         <textarea class="stt-text" id="stt-describe" placeholder="🎤 마이크로 녹음하거나 키보드로 직접 써도 돼요!" style="height:140px; font-size:20px;"></textarea>
         <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
           <button class="mic-btn" id="mic-describe">🔴 녹음 시작</button>
-          <button class="action-btn" id="play-describe" disabled style="font-size:14px; padding:10px 18px; width:auto;">▶️ 다시 듣기</button>
+          <button class="action-btn" id="play-describe" disabled style="font-size:14px; padding:10px 18px;">▶️ 다시 듣기</button>
         </div>
         <button class="btn btn-red" id="btn-submit" style="display:none; margin-top:15px;">🚀 제출하기</button>
       </div>
@@ -379,7 +355,6 @@
     <button class="btn" onclick="location.reload()" style="margin-top:20px;">처음으로 🏠</button>
   </div>
 
-  <!-- Loading -->
   <div id="loading">
     <div class="spinner"></div>
     <h2 style="margin-top:20px;">작품을 저장하는 중...</h2>
@@ -390,10 +365,8 @@
 <div id="reward-overlay"></div>
 
 <script>
-// ★★ Google Apps Script 배포 URL ★★
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbybYRSpWEnTls7Vo3U2aifzGfbC8KKq6sjoldRSTJ9pL07Vq5AOqiNnmq97XYWNAoW1/exec';
 
-// --- App Scaling ---
 function resizeApp() {
   const wrapper = document.getElementById('app-wrapper');
   const w = window.innerWidth, h = window.innerHeight;
@@ -403,14 +376,11 @@ function resizeApp() {
 window.addEventListener('resize', resizeApp);
 resizeApp();
 
-// --- State ---
 let currentStudent = '';
 let isSpeakerOn = false;
 let recognition;
 let selectedColor = '#fdcb6e';
 let selectedEl = null;
-let isMagnetOn = true;
-let isGridOn = false;
 let isRecording = false;
 let mediaRecorder, audioChunks = [], micStream;
 let lastBlobUrl = null;
@@ -419,7 +389,6 @@ let appData = {
   audioBase64:'', imageBase64:'', shapeCount:0
 };
 
-// --- Fallback ---
 const fallbackStudents = ['강민재','김서연','박지훈','이하윤','정시우','최유진','강도현','윤서아','임서준','한지은'];
 
 async function loadConfig() {
@@ -441,23 +410,9 @@ async function loadConfig() {
 }
 loadConfig();
 
-// --- Audio ---
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const initAudioCtx = () => { if (audioCtx.state === 'suspended') audioCtx.resume(); };
 
-const playSnap = () => {
-  if (!isSpeakerOn) return;
-  initAudioCtx();
-  const t = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
-  osc.connect(gain); gain.connect(audioCtx.destination);
-  osc.type='sine';
-  osc.frequency.setValueAtTime(880,t);
-  osc.frequency.exponentialRampToValueAtTime(1320,t+0.08);
-  gain.gain.setValueAtTime(0.15,t);
-  gain.gain.exponentialRampToValueAtTime(0.01,t+0.15);
-  osc.start(t); osc.stop(t+0.15);
-};
 const playClick = () => {
   if (!isSpeakerOn) return;
   initAudioCtx();
@@ -485,7 +440,6 @@ const playChime = () => {
   osc.start(t); osc.stop(t+1.5);
 };
 
-// --- TTS ---
 const synth = window.speechSynthesis;
 let bestVoice = null;
 function pickBestVoice() {
@@ -501,16 +455,6 @@ function pickBestVoice() {
 if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => { bestVoice = pickBestVoice(); };
 setTimeout(() => { bestVoice = pickBestVoice(); }, 500);
 
-function speak(text) {
-  if (!text || !isSpeakerOn) return;
-  synth.cancel();
-  if (!bestVoice) bestVoice = pickBestVoice();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'ko-KR'; u.rate = 0.95; u.pitch = 1.0;
-  if (bestVoice) u.voice = bestVoice;
-  synth.speak(u);
-}
-
 document.getElementById('speaker-toggle').addEventListener('click', () => {
   isSpeakerOn = !isSpeakerOn;
   const btn = document.getElementById('speaker-toggle');
@@ -518,7 +462,6 @@ document.getElementById('speaker-toggle').addEventListener('click', () => {
   btn.textContent = isSpeakerOn ? '🔊' : '🔈';
 });
 
-// --- STT ---
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
@@ -527,7 +470,6 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   recognition.continuous = true;
 }
 
-// --- Audio recording ---
 function blobToBase64(blob) {
   return new Promise((res) => {
     const r = new FileReader();
@@ -548,7 +490,7 @@ async function initAudioOnce() {
   }
 }
 
-// === 색깔 선택 ===
+// === 색깔 ===
 document.querySelectorAll('.color-chip').forEach(c => {
   c.addEventListener('click', () => {
     document.querySelectorAll('.color-chip').forEach(x => x.classList.remove('selected'));
@@ -560,37 +502,37 @@ document.querySelectorAll('.color-chip').forEach(c => {
     }
   });
 });
+document.querySelector('.color-chip').classList.add('selected');
 
-// 색깔 적용 (도형 종류에 따라 분기)
 function applyColor(el, color) {
   const type = el.dataset.type;
   if (type === 'circle' || type === 'square') {
     el.style.background = color;
     el.style.backgroundImage = '';
   } else if (type === 'triangle') {
-    // SVG 색상 변경 (encodeURIComponent 안전 처리)
     const colorEnc = color.replace('#', '%23');
     const svgUrl = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,0 0,100 100,100' fill='${colorEnc}'/></svg>")`;
+    el.style.background = '';
     el.style.backgroundImage = svgUrl;
     el.style.backgroundSize = 'contain';
     el.style.backgroundRepeat = 'no-repeat';
     el.style.backgroundPosition = 'center';
-    el.style.background = '';
-    // 색상 다시 적용을 위해 inline 으로 다시 설정
-    el.style.backgroundImage = svgUrl;
-    el.style.backgroundSize = 'contain';
-    el.style.backgroundRepeat = 'no-repeat';
   }
   el.dataset.color = color;
 }
 
-// === 드래그 & 자석 스냅 (처음 주신 코드 기반으로 재작성) ===
+// === Drag, Rotate, Resize (원본 코드 방식 + 개선) ===
 const canvasArea = document.getElementById('canvas-area');
-const SNAP_DISTANCE = 18;
 
 let isDragging = false;
+let isRotating = false;
+let isResizing = false;
 let dragEl = null;
+let rotateEl = null;
+let resizeEl = null;
 let offsetX = 0, offsetY = 0;
+let startAngle = 0, initialRotation = 0;
+let startSize = 0, startMouseDist = 0;
 let activePointerId = null;
 
 // 1. 팔레트에서 새 도형 끌어오기
@@ -599,58 +541,96 @@ document.querySelectorAll('.shape-item').forEach(item => {
     e.preventDefault();
     const type = item.dataset.type;
 
-    // 클론 생성 (처음 주신 방식)
     const clone = document.createElement('div');
-    clone.className = `clone-item shape-${type}`;
+    clone.className = 'clone-item';
     clone.dataset.type = type;
     clone.dataset.rotation = 0;
-    clone.dataset.scale = 1;
     clone.dataset.scaleX = 1;
     clone.dataset.color = selectedColor;
 
     const baseSize = 80;
     clone.style.width = baseSize + 'px';
     clone.style.height = baseSize + 'px';
-
-    // 색깔 적용
     applyColor(clone, selectedColor);
+
+    // 회전 핸들과 크기조절 핸들 추가
+    const rotHandle = document.createElement('div');
+    rotHandle.className = 'rotate-handle';
+    clone.appendChild(rotHandle);
+
+    const resHandle = document.createElement('div');
+    resHandle.className = 'resize-handle';
+    clone.appendChild(resHandle);
 
     const rect = canvasArea.getBoundingClientRect();
     clone.style.left = (e.clientX - rect.left - baseSize/2) + 'px';
     clone.style.top = (e.clientY - rect.top - baseSize/2) + 'px';
     canvasArea.appendChild(clone);
 
-    // 드래그 시작
     isDragging = true;
     dragEl = clone;
     offsetX = baseSize/2;
     offsetY = baseSize/2;
     activePointerId = e.pointerId;
 
-    // 선택 처리
     selectShape(clone);
-    setupCloneInteraction(clone);
+    setupCloneInteraction(clone, rotHandle, resHandle);
 
-    // pointer capture로 빠른 움직임에도 끊기지 않게
     try { canvasArea.setPointerCapture(e.pointerId); } catch(err){}
   });
 });
 
-// 2. 캔버스에 있는 도형 다시 잡기
-function setupCloneInteraction(el) {
+// 2. 클론 도형의 상호작용 설정 (드래그/회전/크기조절)
+function setupCloneInteraction(el, rotHandle, resHandle) {
+  // 도형 본체 → 드래그
   el.addEventListener('pointerdown', e => {
+    if (e.target.classList.contains('rotate-handle') ||
+        e.target.classList.contains('resize-handle')) return;
     e.stopPropagation();
+
     isDragging = true;
     dragEl = el;
     activePointerId = e.pointerId;
 
     const rect = el.getBoundingClientRect();
-    // transform이 적용되어도 정확한 클릭 위치 계산
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
 
     selectShape(el);
+    try { canvasArea.setPointerCapture(e.pointerId); } catch(err){}
+  });
 
+  // 회전 핸들 → 자유 회전
+  rotHandle.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    isRotating = true;
+    rotateEl = el;
+    activePointerId = e.pointerId;
+
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    startAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180/Math.PI);
+    initialRotation = parseFloat(el.dataset.rotation || 0);
+
+    selectShape(el);
+    try { canvasArea.setPointerCapture(e.pointerId); } catch(err){}
+  });
+
+  // 크기조절 핸들
+  resHandle.addEventListener('pointerdown', e => {
+    e.stopPropagation();
+    isResizing = true;
+    resizeEl = el;
+    activePointerId = e.pointerId;
+
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    startSize = el.offsetWidth;
+    startMouseDist = Math.hypot(e.clientX - cx, e.clientY - cy);
+
+    selectShape(el);
     try { canvasArea.setPointerCapture(e.pointerId); } catch(err){}
   });
 }
@@ -665,126 +645,78 @@ function selectShape(el) {
   selectedEl = el;
 }
 
-// 빈 캔버스 클릭 시 선택 해제
 canvasArea.addEventListener('pointerdown', e => {
-  if (e.target === canvasArea || e.target.classList.contains('grid-bg')) {
+  if (e.target === canvasArea) {
     document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
     selectedEl = null;
   }
 });
 
-// 3. 드래그 중 (자석 스냅 포함)
+// 통합 pointermove
 canvasArea.addEventListener('pointermove', e => {
-  if (!isDragging || !dragEl || e.pointerId !== activePointerId) return;
-  e.preventDefault();
+  if (e.pointerId !== activePointerId) return;
 
-  const rect = canvasArea.getBoundingClientRect();
-  let x = e.clientX - rect.left - offsetX;
-  let y = e.clientY - rect.top - offsetY;
-
-  // 자석 스냅
-  if (isMagnetOn) {
-    const myRect = dragEl.getBoundingClientRect();
-    const myW = myRect.width, myH = myRect.height;
-
-    let snapX = null, snapY = null;
-    let snapped = false;
-
-    document.querySelectorAll('.clone-item').forEach(other => {
-      if (other === dragEl) return;
-      const oRect = other.getBoundingClientRect();
-      const oLeft = oRect.left - rect.left;
-      const oTop = oRect.top - rect.top;
-      const oRight = oLeft + oRect.width;
-      const oBottom = oTop + oRect.height;
-
-      const myLeft = x, myTop = y;
-      const myRight = x + myW, myBottom = y + myH;
-
-      // 변과 변이 서로 닿게 (좌우)
-      if (Math.abs(myRight - oLeft) < SNAP_DISTANCE &&
-          rangesOverlap(myTop, myBottom, oTop - 10, oBottom + 10)) {
-        snapX = oLeft - myW; snapped = true;
-      } else if (Math.abs(myLeft - oRight) < SNAP_DISTANCE &&
-                 rangesOverlap(myTop, myBottom, oTop - 10, oBottom + 10)) {
-        snapX = oRight; snapped = true;
-      }
-      // 변과 변이 서로 닿게 (위아래)
-      if (Math.abs(myBottom - oTop) < SNAP_DISTANCE &&
-          rangesOverlap(myLeft, myRight, oLeft - 10, oRight + 10)) {
-        snapY = oTop - myH; snapped = true;
-      } else if (Math.abs(myTop - oBottom) < SNAP_DISTANCE &&
-                 rangesOverlap(myLeft, myRight, oLeft - 10, oRight + 10)) {
-        snapY = oBottom; snapped = true;
-      }
-      // 모서리 정렬
-      if (Math.abs(myLeft - oLeft) < SNAP_DISTANCE) { snapX = oLeft; snapped = true; }
-      else if (Math.abs(myRight - oRight) < SNAP_DISTANCE) { snapX = oRight - myW; snapped = true; }
-      if (Math.abs(myTop - oTop) < SNAP_DISTANCE) { snapY = oTop; snapped = true; }
-      else if (Math.abs(myBottom - oBottom) < SNAP_DISTANCE) { snapY = oBottom - myH; snapped = true; }
-    });
-
-    if (snapX !== null) x = snapX;
-    if (snapY !== null) y = snapY;
-
-    if (snapped) {
-      if (!dragEl.classList.contains('snapping')) {
-        dragEl.classList.add('snapping');
-        playSnap();
-        showMagnetPulse(x + dragEl.offsetWidth/2, y + dragEl.offsetHeight/2);
-      }
-    } else {
-      dragEl.classList.remove('snapping');
-    }
+  // 회전 중
+  if (isRotating && rotateEl) {
+    e.preventDefault();
+    const rect = rotateEl.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const currentAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180/Math.PI);
+    const diff = currentAngle - startAngle;
+    rotateEl.dataset.rotation = initialRotation + diff;
+    applyTransform(rotateEl);
+    return;
   }
 
-  dragEl.style.left = x + 'px';
-  dragEl.style.top = y + 'px';
+  // 크기조절 중
+  if (isResizing && resizeEl) {
+    e.preventDefault();
+    const rect = resizeEl.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const currentDist = Math.hypot(e.clientX - cx, e.clientY - cy);
+    const ratio = currentDist / startMouseDist;
+    let newSize = Math.max(30, Math.min(400, startSize * ratio));
+    resizeEl.style.width = newSize + 'px';
+    resizeEl.style.height = newSize + 'px';
+    return;
+  }
+
+  // 드래그 중
+  if (isDragging && dragEl) {
+    e.preventDefault();
+    const rect = canvasArea.getBoundingClientRect();
+    const x = e.clientX - rect.left - offsetX;
+    const y = e.clientY - rect.top - offsetY;
+    dragEl.style.left = x + 'px';
+    dragEl.style.top = y + 'px';
+  }
 });
 
-function rangesOverlap(a1, a2, b1, b2) {
-  return !(a2 < b1 || b2 < a1);
-}
-
-function showMagnetPulse(x, y) {
-  const pulse = document.createElement('div');
-  pulse.className = 'magnet-pulse';
-  pulse.style.left = x + 'px';
-  pulse.style.top = y + 'px';
-  canvasArea.appendChild(pulse);
-  setTimeout(() => pulse.remove(), 600);
-}
-
-// 4. 드래그 종료
 canvasArea.addEventListener('pointerup', e => {
-  if (isDragging && dragEl) {
-    dragEl.classList.remove('snapping');
-    isDragging = false;
-    dragEl = null;
-    activePointerId = null;
-    try { canvasArea.releasePointerCapture(e.pointerId); } catch(err){}
-  }
+  if (isDragging) { isDragging = false; dragEl = null; }
+  if (isRotating) { isRotating = false; rotateEl = null; }
+  if (isResizing) { isResizing = false; resizeEl = null; }
+  activePointerId = null;
+  try { canvasArea.releasePointerCapture(e.pointerId); } catch(err){}
 });
 canvasArea.addEventListener('pointercancel', () => {
-  if (isDragging && dragEl) {
-    dragEl.classList.remove('snapping');
-    isDragging = false;
-    dragEl = null;
-    activePointerId = null;
-  }
+  isDragging = false; isRotating = false; isResizing = false;
+  dragEl = null; rotateEl = null; resizeEl = null;
+  activePointerId = null;
 });
 
-// === 변형 (회전, 반전, 크기) ===
 function applyTransform(el) {
   const r = parseFloat(el.dataset.rotation || 0);
-  const s = parseFloat(el.dataset.scale || 1);
   const sx = parseFloat(el.dataset.scaleX || 1);
-  el.style.transform = `rotate(${r}deg) scale(${s * sx}, ${s})`;
+  el.style.transform = `rotate(${r}deg) scaleX(${sx})`;
 }
 
+// === Action Buttons ===
 document.getElementById('btn-rotate').addEventListener('click', () => {
   if (!selectedEl) return;
-  let r = (parseInt(selectedEl.dataset.rotation || 0) + 45) % 360;
+  let r = (parseFloat(selectedEl.dataset.rotation || 0) + 45) % 360;
   selectedEl.dataset.rotation = r;
   applyTransform(selectedEl);
   playClick();
@@ -796,20 +728,6 @@ document.getElementById('btn-flip').addEventListener('click', () => {
   applyTransform(selectedEl);
   playClick();
 });
-document.getElementById('btn-bigger').addEventListener('click', () => {
-  if (!selectedEl) return;
-  let s = Math.min(2.5, parseFloat(selectedEl.dataset.scale || 1) * 1.15);
-  selectedEl.dataset.scale = s;
-  applyTransform(selectedEl);
-  playClick();
-});
-document.getElementById('btn-smaller').addEventListener('click', () => {
-  if (!selectedEl) return;
-  let s = Math.max(0.3, parseFloat(selectedEl.dataset.scale || 1) / 1.15);
-  selectedEl.dataset.scale = s;
-  applyTransform(selectedEl);
-  playClick();
-});
 document.getElementById('btn-duplicate').addEventListener('click', () => {
   if (!selectedEl) return;
   const clone = selectedEl.cloneNode(true);
@@ -817,7 +735,12 @@ document.getElementById('btn-duplicate').addEventListener('click', () => {
   clone.style.left = (parseFloat(selectedEl.style.left) + 30) + 'px';
   clone.style.top = (parseFloat(selectedEl.style.top) + 30) + 'px';
   canvasArea.appendChild(clone);
-  setupCloneInteraction(clone);
+
+  // 핸들 다시 연결
+  const rotH = clone.querySelector('.rotate-handle');
+  const resH = clone.querySelector('.resize-handle');
+  setupCloneInteraction(clone, rotH, resH);
+
   selectShape(clone);
   playClick();
 });
@@ -831,19 +754,6 @@ document.getElementById('btn-clear').addEventListener('click', () => {
   if (!confirm('정말 모두 지울까요?')) return;
   document.querySelectorAll('.clone-item').forEach(c => c.remove());
   selectedEl = null;
-  playClick();
-});
-
-// === Toggle ===
-document.getElementById('toggle-magnet').addEventListener('click', () => {
-  isMagnetOn = !isMagnetOn;
-  document.getElementById('toggle-magnet').classList.toggle('on', isMagnetOn);
-  playClick();
-});
-document.getElementById('toggle-grid').addEventListener('click', () => {
-  isGridOn = !isGridOn;
-  document.getElementById('toggle-grid').classList.toggle('on', isGridOn);
-  document.getElementById('grid-bg').classList.toggle('show', isGridOn);
   playClick();
 });
 
@@ -879,6 +789,7 @@ document.getElementById('btn-finish').addEventListener('click', async () => {
   appData.artworkTitle = title;
   appData.shapeCount = shapes.length;
 
+  // 캡쳐 전 선택 해제 (점선/핸들 제거)
   document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
   const canvas = await html2canvas(canvasArea, { backgroundColor:'#ffffff' });
   appData.imageBase64 = canvas.toDataURL('image/png');
@@ -930,7 +841,6 @@ descMicBtn.addEventListener('click', async () => {
 
     mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
     mediaRecorder.start();
-
   } else {
     isRecording = false;
     descMicBtn.classList.remove('recording');
