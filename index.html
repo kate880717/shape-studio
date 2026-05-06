@@ -4,21 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>모양 만들기 스튜디오 ✨</title>
-<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
   :root {
     --primary: #ff6b6b;
     --secondary: #4ecdc4;
     --accent: #feca57;
-    --circle-color: #f9ca24;
-    --triangle-color: #4a90e2;
-    --square-color: #eb4d4b;
-    --purple: #a55eea;
-    --green: #26de81;
-    --pink: #fc5c65;
+    --circle-color: #fdcb6e;
+    --triangle-color: #d63031;
+    --square-color: #0984e3;
   }
-  * { box-sizing:border-box; user-select:none; -webkit-user-select:none; font-family:'Jua','Gaegu',sans-serif; }
+  * { box-sizing:border-box; user-select:none; -webkit-user-select:none; font-family:'Jua',sans-serif; }
   body {
     margin:0; padding:0;
     background:linear-gradient(135deg,#fbc2eb 0%,#a6c1ee 100%);
@@ -42,7 +39,6 @@
     padding:0 25px; flex-shrink:0; border-bottom:2px solid rgba(255,255,255,0.8);
   }
   header h1 { margin:0; font-size:30px; color:var(--primary); }
-  .header-buttons { display:flex; gap:10px; }
   .speaker-btn {
     background:#fff; border:none; width:50px; height:50px; border-radius:50%;
     font-size:22px; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.1);
@@ -55,8 +51,7 @@
     overflow:hidden; animation:fadeIn 0.5s ease;
   }
   .screen.active { display:flex; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(20px);} to{opacity:1;} }
-  @keyframes pop { 0%{transform:scale(0);} 60%{transform:scale(1.2);} 100%{transform:scale(1);} }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 
   h2 { font-size:30px; color:#333; margin:0 0 15px 0; text-align:center; }
   .subtitle { font-size:20px; color:#666; text-align:center; margin-bottom:15px; }
@@ -80,51 +75,52 @@
     margin:15px 0; min-width:280px; background:white; cursor:pointer; font-family:'Jua',sans-serif;
   }
 
-  /* Studio layout */
+  /* Studio */
   #screen-studio { padding:15px 20px; }
   .studio-layout { display:flex; gap:15px; flex:1; min-height:0; }
 
-  /* Toolbox */
   .toolbox {
     width:240px; background:rgba(255,255,255,0.85); border-radius:20px;
-    padding:15px; display:flex; flex-direction:column; gap:10px;
+    padding:15px; display:flex; flex-direction:column; gap:12px;
     box-shadow:0 10px 25px rgba(0,0,0,0.08); overflow-y:auto;
   }
-  .tool-section {
-    border-bottom:2px dashed #eee; padding-bottom:10px; margin-bottom:5px;
-  }
+  .tool-section { border-bottom:2px dashed #eee; padding-bottom:12px; }
   .tool-section:last-child { border-bottom:none; }
-  .tool-section h4 { margin:0 0 8px 0; font-size:14px; color:#666; }
+  .tool-section h4 { margin:0 0 10px 0; font-size:15px; color:#666; text-align:center; }
 
+  /* 모양 바구니 (3가지) */
   .shape-grid {
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
+    display:flex; flex-direction:column; gap:12px; align-items:center;
   }
   .shape-item {
-    width:100%; aspect-ratio:1; cursor:grab; position:relative;
-    display:flex; justify-content:center; align-items:center;
-    transition:transform 0.2s;
+    position:relative; cursor:grab; flex-shrink:0;
+    transition:transform 0.15s;
   }
   .shape-item:hover { transform:scale(1.1); }
   .shape-item:active { cursor:grabbing; }
 
-  .shape-circle   { background:var(--circle-color); border-radius:50%; }
-  .shape-square   { background:var(--square-color); }
-  .shape-rect     { background:var(--square-color); width:90% !important; height:60% !important; align-self:center; }
+  /* 도형 정의 (단순화 - 처음 주신 방식 채택) */
+  .shape-circle {
+    width:75px; height:75px; border-radius:50%;
+    background:var(--circle-color);
+  }
+  .shape-square {
+    width:75px; height:75px;
+    background:var(--square-color);
+  }
   .shape-triangle {
-    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 5,95 95,95" fill="%234a90e2"/></svg>');
-    background-size:contain; background-repeat:no-repeat;
-  }
-  .shape-rtri {
-    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="5,5 5,95 95,95" fill="%234a90e2"/></svg>');
-    background-size:contain; background-repeat:no-repeat;
-  }
-  .shape-diamond {
-    background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 95,50 50,95 5,50" fill="%23a55eea"/></svg>');
-    background-size:contain; background-repeat:no-repeat;
+    width:75px; height:75px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,0 0,100 100,100' fill='%23d63031'/></svg>");
+    background-size:contain; background-repeat:no-repeat; background-position:center;
   }
 
-  /* Color palette */
-  .color-grid { display:flex; gap:6px; flex-wrap:wrap; }
+  .palette-help {
+    font-size:12px; color:#888; text-align:center; margin:0;
+    line-height:1.4; font-weight:bold;
+  }
+
+  /* 색깔 변경 */
+  .color-grid { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
   .color-chip {
     width:30px; height:30px; border-radius:50%; cursor:pointer;
     border:2px solid white; box-shadow:0 2px 5px rgba(0,0,0,0.15);
@@ -133,24 +129,26 @@
   .color-chip:hover { transform:scale(1.2); }
   .color-chip.selected { border-color:#333; transform:scale(1.2); }
 
-  /* Action buttons */
+  /* 액션 버튼 */
   .action-btn {
-    padding:8px 12px; border-radius:10px; border:none; font-size:14px;
+    padding:9px 12px; border-radius:10px; border:none; font-size:14px;
     font-weight:bold; cursor:pointer; background:#f1f2f6;
     display:flex; align-items:center; justify-content:center; gap:5px;
-    transition:all 0.15s; font-family:'Jua',sans-serif;
+    transition:all 0.15s; font-family:'Jua',sans-serif; width:100%;
   }
   .action-btn:hover { background:#dfe4ea; }
   .action-btn:active { transform:scale(0.95); }
   .action-btn.danger { background:#ff7675; color:white; }
+  .action-btn:disabled { opacity:0.4; cursor:not-allowed; }
 
   /* Toggle */
   .toggle-row {
-    display:flex; align-items:center; gap:8px; padding:5px 0; font-size:14px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:5px 0; font-size:14px;
   }
   .toggle-switch {
     position:relative; width:38px; height:22px; background:#ccc;
-    border-radius:20px; cursor:pointer; transition:all 0.2s;
+    border-radius:20px; cursor:pointer; transition:all 0.2s; flex-shrink:0;
   }
   .toggle-switch.on { background:var(--secondary); }
   .toggle-switch::after {
@@ -166,39 +164,34 @@
     flex:1; background:white; border-radius:20px; position:relative;
     overflow:hidden; box-shadow:inset 0 0 20px rgba(0,0,0,0.05);
     border:3px solid var(--secondary); min-height:0;
+    touch-action:none;
   }
   .grid-bg {
     position:absolute; inset:0;
     background-image:
-      linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+      linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px);
     background-size:30px 30px; pointer-events:none; opacity:0;
     transition:opacity 0.3s;
   }
   .grid-bg.show { opacity:1; }
 
   .clone-item {
-    position:absolute; touch-action:none; transform-origin:center center;
-    transition:filter 0.15s, transform 0.05s;
+    position:absolute; touch-action:none;
+    transform-origin:center center;
+    transition:filter 0.15s;
   }
-  .clone-item.snapping {
-    filter:drop-shadow(0 0 12px var(--accent));
-  }
+  .clone-item.snapping { filter:drop-shadow(0 0 12px var(--accent)); }
   .clone-item.selected {
     outline:4px dashed var(--primary); z-index:101 !important;
     filter:drop-shadow(0 0 10px rgba(255,107,107,0.5));
   }
 
-  .magnet-indicator {
-    position:absolute; pointer-events:none;
-    width:0; height:0; transform:translate(-50%,-50%);
-    z-index:200;
-  }
   .magnet-pulse {
-    position:absolute; top:0; left:0; width:30px; height:30px;
+    position:absolute; width:30px; height:30px;
     border:3px solid var(--accent); border-radius:50%;
     transform:translate(-50%,-50%);
-    animation:magnetPulse 0.6s ease-out;
+    animation:magnetPulse 0.6s ease-out; pointer-events:none; z-index:200;
   }
   @keyframes magnetPulse {
     0% { transform:translate(-50%,-50%) scale(0.3); opacity:1; }
@@ -236,7 +229,7 @@
     100% { transform:scale(1); box-shadow:0 0 0 0 rgba(255,107,107,0); }
   }
 
-  /* End screen */
+  /* End */
   #screen-end { justify-content:center; align-items:center; }
   #screen-end h1 { font-size:50px; color:var(--primary); }
   #artwork-preview {
@@ -263,15 +256,6 @@
     0% { transform:translateY(-50px) rotate(0); opacity:1; }
     100% { transform:translateY(100vh) rotate(720deg); opacity:0; }
   }
-
-  /* Idea cards */
-  .idea-card {
-    background:white; border-radius:12px; padding:8px; cursor:pointer;
-    text-align:center; transition:all 0.2s; box-shadow:0 3px 8px rgba(0,0,0,0.05);
-  }
-  .idea-card:hover { transform:translateY(-3px); box-shadow:0 6px 15px rgba(0,0,0,0.1); }
-  .idea-card .icon { font-size:32px; }
-  .idea-card .name { font-size:13px; color:#666; }
 </style>
 </head>
 <body>
@@ -280,9 +264,7 @@
 
   <header>
     <h1>✨ 모양 만들기 스튜디오</h1>
-    <div class="header-buttons">
-      <button class="speaker-btn" id="speaker-toggle">🔈</button>
-    </div>
+    <button class="speaker-btn" id="speaker-toggle">🔈</button>
   </header>
 
   <!-- Stage 0: Start -->
@@ -290,9 +272,7 @@
     <h1>🎨 모양 만들기 스튜디오</h1>
     <p class="subtitle">도형들을 자석처럼 붙이며 멋진 작품을 만들어 보아요!</p>
     <p style="font-size:18px; color:#666;">⚡ 도형이 가까워지면 자석처럼 딱 붙어요!</p>
-
     <select id="student-select"><option value="">⏳ 학생 명단 불러오는 중...</option></select>
-
     <button class="btn btn-red" id="btn-start" style="margin-top:15px;">시작하기 🚀</button>
   </div>
 
@@ -300,39 +280,36 @@
   <div id="screen-studio" class="screen">
     <div class="studio-layout">
 
-      <!-- Left toolbox -->
+      <!-- 도구함 -->
       <div class="toolbox">
         <div class="tool-section">
           <h4>🧺 모양 바구니</h4>
           <div class="shape-grid">
             <div class="shape-item shape-circle" data-type="circle"></div>
-            <div class="shape-item shape-square" data-type="square"></div>
             <div class="shape-item shape-triangle" data-type="triangle"></div>
-            <div class="shape-item shape-rect" data-type="rect"></div>
-            <div class="shape-item shape-rtri" data-type="rtri"></div>
-            <div class="shape-item shape-diamond" data-type="diamond"></div>
+            <div class="shape-item shape-square" data-type="square"></div>
           </div>
-          <p style="font-size:11px; color:#888; margin:6px 0 0 0; text-align:center;">눌러서 캔버스로<br>끌어오세요</p>
+          <p class="palette-help" style="margin-top:10px;">눌러서 캔버스로<br>끌어오세요</p>
         </div>
 
         <div class="tool-section">
-          <h4>🎨 색깔</h4>
+          <h4>🎨 색깔 바꾸기</h4>
           <div class="color-grid" id="color-grid">
-            <div class="color-chip selected" style="background:#f9ca24;" data-color="#f9ca24"></div>
-            <div class="color-chip" style="background:#eb4d4b;" data-color="#eb4d4b"></div>
-            <div class="color-chip" style="background:#4a90e2;" data-color="#4a90e2"></div>
+            <div class="color-chip" style="background:#fdcb6e;" data-color="#fdcb6e"></div>
+            <div class="color-chip" style="background:#d63031;" data-color="#d63031"></div>
+            <div class="color-chip" style="background:#0984e3;" data-color="#0984e3"></div>
             <div class="color-chip" style="background:#26de81;" data-color="#26de81"></div>
             <div class="color-chip" style="background:#a55eea;" data-color="#a55eea"></div>
             <div class="color-chip" style="background:#fc5c65;" data-color="#fc5c65"></div>
             <div class="color-chip" style="background:#fd9644;" data-color="#fd9644"></div>
             <div class="color-chip" style="background:#778ca3;" data-color="#778ca3"></div>
           </div>
-          <p style="font-size:11px; color:#888; margin:6px 0 0 0;">색깔을 고른 뒤 도형을 클릭!</p>
+          <p class="palette-help" style="margin-top:8px;">도형 선택 후<br>색깔을 클릭!</p>
         </div>
 
         <div class="tool-section">
           <h4>🛠️ 선택한 도형</h4>
-          <div style="display:flex; flex-direction:column; gap:5px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
             <button class="action-btn" id="btn-rotate">↻ 돌리기 (45°)</button>
             <button class="action-btn" id="btn-flip">↪️ 좌우 반전</button>
             <button class="action-btn" id="btn-bigger">➕ 크게</button>
@@ -343,28 +320,16 @@
         </div>
 
         <div class="tool-section">
-          <h4>⚙️ 캔버스 설정</h4>
+          <h4>⚙️ 설정</h4>
           <div class="toggle-row">
-            <span>자석 효과</span>
+            <span>🧲 자석 효과</span>
             <div class="toggle-switch on" id="toggle-magnet"></div>
           </div>
           <div class="toggle-row">
-            <span>격자 보기</span>
+            <span>📐 격자 보기</span>
             <div class="toggle-switch" id="toggle-grid"></div>
           </div>
-          <button class="action-btn danger" id="btn-clear" style="margin-top:8px; width:100%;">🧹 모두 지우기</button>
-        </div>
-
-        <div class="tool-section">
-          <h4>💡 작품 아이디어</h4>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-            <div class="idea-card"><div class="icon">🏠</div><div class="name">집</div></div>
-            <div class="idea-card"><div class="icon">🤖</div><div class="name">로봇</div></div>
-            <div class="idea-card"><div class="icon">🚗</div><div class="name">자동차</div></div>
-            <div class="idea-card"><div class="icon">🌳</div><div class="name">나무</div></div>
-            <div class="idea-card"><div class="icon">🚀</div><div class="name">로켓</div></div>
-            <div class="idea-card"><div class="icon">🐱</div><div class="name">고양이</div></div>
-          </div>
+          <button class="action-btn danger" id="btn-clear" style="margin-top:8px;">🧹 모두 지우기</button>
         </div>
       </div>
 
@@ -386,19 +351,17 @@
   <div id="screen-describe" class="screen" style="justify-content:center; align-items:center;">
     <h2>🎨 멋진 작품이 완성됐어요!</h2>
     <p class="subtitle">작품을 어떻게 만들었는지 설명해보세요!</p>
-
     <div style="display:flex; gap:25px; align-items:flex-start; max-width:1100px; width:100%;">
       <div style="flex:1; text-align:center;">
         <img id="describe-preview" style="max-width:100%; max-height:350px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.15); border:3px solid white;">
         <p style="font-size:24px; color:var(--primary); margin-top:10px; font-weight:bold;" id="describe-title"></p>
       </div>
-
       <div style="flex:1;">
-        <p style="font-size:18px; color:#666; margin-bottom:8px;">💬 어떤 모양들을 사용했나요? 무엇을 만들었나요?</p>
+        <p style="font-size:18px; color:#666; margin-bottom:8px;">💬 어떤 모양을 사용했나요? 무엇을 만들었나요?</p>
         <textarea class="stt-text" id="stt-describe" placeholder="🎤 마이크로 녹음하거나 키보드로 직접 써도 돼요!" style="height:140px; font-size:20px;"></textarea>
         <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
           <button class="mic-btn" id="mic-describe">🔴 녹음 시작</button>
-          <button class="action-btn" id="play-describe" disabled style="font-size:14px; padding:10px 18px;">▶️ 다시 듣기</button>
+          <button class="action-btn" id="play-describe" disabled style="font-size:14px; padding:10px 18px; width:auto;">▶️ 다시 듣기</button>
         </div>
         <button class="btn btn-red" id="btn-submit" style="display:none; margin-top:15px;">🚀 제출하기</button>
       </div>
@@ -425,9 +388,10 @@
 <div id="reward-overlay"></div>
 
 <script>
-// ★★ 메인 앱과 같은 GAS URL 사용 (또는 별도 배포 URL) ★★
+// ★★ Google Apps Script 배포 URL ★★
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbybYRSpWEnTls7Vo3U2aifzGfbC8KKq6sjoldRSTJ9pL07Vq5AOqiNnmq97XYWNAoW1/exec';
 
+// --- App Scaling ---
 function resizeApp() {
   const wrapper = document.getElementById('app-wrapper');
   const w = window.innerWidth, h = window.innerHeight;
@@ -437,11 +401,11 @@ function resizeApp() {
 window.addEventListener('resize', resizeApp);
 resizeApp();
 
-// State
+// --- State ---
 let currentStudent = '';
 let isSpeakerOn = false;
 let recognition;
-let selectedColor = '#f9ca24';
+let selectedColor = '#fdcb6e';
 let selectedEl = null;
 let isMagnetOn = true;
 let isGridOn = false;
@@ -449,15 +413,11 @@ let isRecording = false;
 let mediaRecorder, audioChunks = [], micStream;
 let lastBlobUrl = null;
 let appData = {
-  studentName:'',
-  artworkTitle:'',
-  description:'',
-  audioBase64:'',
-  imageBase64:'',
-  shapeCount:0
+  studentName:'', artworkTitle:'', description:'',
+  audioBase64:'', imageBase64:'', shapeCount:0
 };
 
-// Fallback students
+// --- Fallback ---
 const fallbackStudents = ['강민재','김서연','박지훈','이하윤','정시우','최유진','강도현','윤서아','임서준','한지은'];
 
 async function loadConfig() {
@@ -479,7 +439,7 @@ async function loadConfig() {
 }
 loadConfig();
 
-// Audio context
+// --- Audio ---
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const initAudioCtx = () => { if (audioCtx.state === 'suspended') audioCtx.resume(); };
 
@@ -523,7 +483,7 @@ const playChime = () => {
   osc.start(t); osc.stop(t+1.5);
 };
 
-// TTS
+// --- TTS ---
 const synth = window.speechSynthesis;
 let bestVoice = null;
 function pickBestVoice() {
@@ -556,7 +516,7 @@ document.getElementById('speaker-toggle').addEventListener('click', () => {
   btn.textContent = isSpeakerOn ? '🔊' : '🔈';
 });
 
-// STT
+// --- STT ---
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
@@ -565,7 +525,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   recognition.continuous = true;
 }
 
-// Audio recording
+// --- Audio recording ---
 function blobToBase64(blob) {
   return new Promise((res) => {
     const r = new FileReader();
@@ -586,122 +546,124 @@ async function initAudioOnce() {
   }
 }
 
-// Color selection
+// === 색깔 선택 ===
 document.querySelectorAll('.color-chip').forEach(c => {
   c.addEventListener('click', () => {
     document.querySelectorAll('.color-chip').forEach(x => x.classList.remove('selected'));
     c.classList.add('selected');
     selectedColor = c.dataset.color;
-    // 선택된 도형이 있으면 색깔 적용
     if (selectedEl) {
-      applyColorToShape(selectedEl, selectedColor);
+      applyColor(selectedEl, selectedColor);
       playClick();
     }
   });
 });
 
-function applyColorToShape(el, color) {
+// 색깔 적용 (도형 종류에 따라 분기)
+function applyColor(el, color) {
   const type = el.dataset.type;
-  if (type === 'circle' || type === 'square' || type === 'rect') {
+  if (type === 'circle' || type === 'square') {
     el.style.background = color;
-  } else if (type === 'triangle' || type === 'rtri' || type === 'diamond') {
-    let svg;
-    const enc = encodeURIComponent(color).replace('#','%23');
-    if (type === 'triangle') svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 5,95 95,95" fill="${enc}"/></svg>`;
-    else if (type === 'rtri') svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="5,5 5,95 95,95" fill="${enc}"/></svg>`;
-    else if (type === 'diamond') svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 95,50 50,95 5,50" fill="${enc}"/></svg>`;
-    el.style.backgroundImage = `url('data:image/svg+xml;utf8,${svg.replace(/"/g, "'")}')`;
+    el.style.backgroundImage = '';
+  } else if (type === 'triangle') {
+    // SVG 색상 변경 (encodeURIComponent 안전 처리)
+    const colorEnc = color.replace('#', '%23');
+    const svgUrl = `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,0 0,100 100,100' fill='${colorEnc}'/></svg>")`;
+    el.style.backgroundImage = svgUrl;
+    el.style.backgroundSize = 'contain';
+    el.style.backgroundRepeat = 'no-repeat';
+    el.style.backgroundPosition = 'center';
+    el.style.background = '';
+    // 색상 다시 적용을 위해 inline 으로 다시 설정
+    el.style.backgroundImage = svgUrl;
+    el.style.backgroundSize = 'contain';
+    el.style.backgroundRepeat = 'no-repeat';
   }
   el.dataset.color = color;
 }
 
-// === Drag & Magnetic Snap ===
+// === 드래그 & 자석 스냅 (처음 주신 코드 기반으로 재작성) ===
 const canvasArea = document.getElementById('canvas-area');
-const SNAP_DISTANCE = 25; // 자석 스냅 거리 (px)
+const SNAP_DISTANCE = 18;
 
-let isDragging = false, dragEl = null;
+let isDragging = false;
+let dragEl = null;
 let offsetX = 0, offsetY = 0;
-let dragStartTime = 0;
+let activePointerId = null;
 
+// 1. 팔레트에서 새 도형 끌어오기
 document.querySelectorAll('.shape-item').forEach(item => {
   item.addEventListener('pointerdown', e => {
-    isDragging = true;
-    dragStartTime = Date.now();
+    e.preventDefault();
+    const type = item.dataset.type;
+
+    // 클론 생성 (처음 주신 방식)
     const clone = document.createElement('div');
-    clone.className = 'clone-item';
-    clone.dataset.type = item.dataset.type;
+    clone.className = `clone-item shape-${type}`;
+    clone.dataset.type = type;
     clone.dataset.rotation = 0;
     clone.dataset.scale = 1;
     clone.dataset.scaleX = 1;
     clone.dataset.color = selectedColor;
 
-    let baseSize = 80;
-    const type = item.dataset.type;
-    let bg = '', extraStyle = '';
-    if (type === 'circle') {
-      bg = `background:${selectedColor}; border-radius:50%;`;
-      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
-    } else if (type === 'square') {
-      bg = `background:${selectedColor};`;
-      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
-    } else if (type === 'rect') {
-      bg = `background:${selectedColor};`;
-      extraStyle = `width:${baseSize*1.4}px; height:${baseSize*0.6}px;`;
-    } else if (type === 'triangle') {
-      const enc = encodeURIComponent(selectedColor).replace('#','%23');
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 5,95 95,95' fill='${enc}'/></svg>`;
-      bg = `background-image:url('data:image/svg+xml;utf8,${svg}'); background-size:contain; background-repeat:no-repeat;`;
-      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
-    } else if (type === 'rtri') {
-      const enc = encodeURIComponent(selectedColor).replace('#','%23');
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='5,5 5,95 95,95' fill='${enc}'/></svg>`;
-      bg = `background-image:url('data:image/svg+xml;utf8,${svg}'); background-size:contain; background-repeat:no-repeat;`;
-      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
-    } else if (type === 'diamond') {
-      const enc = encodeURIComponent(selectedColor).replace('#','%23');
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 95,50 50,95 5,50' fill='${enc}'/></svg>`;
-      bg = `background-image:url('data:image/svg+xml;utf8,${svg}'); background-size:contain; background-repeat:no-repeat;`;
-      extraStyle = `width:${baseSize}px; height:${baseSize}px;`;
-    }
-    clone.style.cssText = bg + extraStyle;
+    const baseSize = 80;
+    clone.style.width = baseSize + 'px';
+    clone.style.height = baseSize + 'px';
+
+    // 색깔 적용
+    applyColor(clone, selectedColor);
 
     const rect = canvasArea.getBoundingClientRect();
-    let w = parseFloat(extraStyle.match(/width:(\d+\.?\d*)/)[1]);
-    let h = parseFloat(extraStyle.match(/height:(\d+\.?\d*)/)[1]);
-    clone.style.left = (e.clientX - rect.left - w/2) + 'px';
-    clone.style.top = (e.clientY - rect.top - h/2) + 'px';
+    clone.style.left = (e.clientX - rect.left - baseSize/2) + 'px';
+    clone.style.top = (e.clientY - rect.top - baseSize/2) + 'px';
     canvasArea.appendChild(clone);
-    offsetX = w/2; offsetY = h/2;
+
+    // 드래그 시작
+    isDragging = true;
     dragEl = clone;
+    offsetX = baseSize/2;
+    offsetY = baseSize/2;
+    activePointerId = e.pointerId;
 
-    // Select
-    document.querySelectorAll('.clone-item').forEach(c => { c.style.zIndex=1; c.classList.remove('selected'); });
-    clone.style.zIndex = 100;
-    clone.classList.add('selected');
-    selectedEl = clone;
-
+    // 선택 처리
+    selectShape(clone);
     setupCloneInteraction(clone);
-    e.stopPropagation();
+
+    // pointer capture로 빠른 움직임에도 끊기지 않게
+    try { canvasArea.setPointerCapture(e.pointerId); } catch(err){}
   });
 });
 
+// 2. 캔버스에 있는 도형 다시 잡기
 function setupCloneInteraction(el) {
   el.addEventListener('pointerdown', e => {
+    e.stopPropagation();
     isDragging = true;
     dragEl = el;
-    dragStartTime = Date.now();
+    activePointerId = e.pointerId;
+
     const rect = el.getBoundingClientRect();
+    // transform이 적용되어도 정확한 클릭 위치 계산
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
 
-    document.querySelectorAll('.clone-item').forEach(c => { c.style.zIndex=1; c.classList.remove('selected'); });
-    el.style.zIndex = 100;
-    el.classList.add('selected');
-    selectedEl = el;
-    e.stopPropagation();
+    selectShape(el);
+
+    try { canvasArea.setPointerCapture(e.pointerId); } catch(err){}
   });
 }
 
+function selectShape(el) {
+  document.querySelectorAll('.clone-item').forEach(c => {
+    c.style.zIndex = 1;
+    c.classList.remove('selected');
+  });
+  el.style.zIndex = 100;
+  el.classList.add('selected');
+  selectedEl = el;
+}
+
+// 빈 캔버스 클릭 시 선택 해제
 canvasArea.addEventListener('pointerdown', e => {
   if (e.target === canvasArea || e.target.classList.contains('grid-bg')) {
     document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
@@ -709,22 +671,22 @@ canvasArea.addEventListener('pointerdown', e => {
   }
 });
 
-document.addEventListener('pointermove', e => {
-  if (!isDragging || !dragEl) return;
+// 3. 드래그 중 (자석 스냅 포함)
+canvasArea.addEventListener('pointermove', e => {
+  if (!isDragging || !dragEl || e.pointerId !== activePointerId) return;
+  e.preventDefault();
+
   const rect = canvasArea.getBoundingClientRect();
   let x = e.clientX - rect.left - offsetX;
   let y = e.clientY - rect.top - offsetY;
 
-  // 자석 스냅: 다른 도형의 가장자리에 가까워지면 딱 붙음
+  // 자석 스냅
   if (isMagnetOn) {
     const myRect = dragEl.getBoundingClientRect();
     const myW = myRect.width, myH = myRect.height;
-    const myLeft = x, myTop = y;
-    const myRight = x + myW, myBottom = y + myH;
-    const myCx = x + myW/2, myCy = y + myH/2;
 
     let snapX = null, snapY = null;
-    let isSnapping = false;
+    let snapped = false;
 
     document.querySelectorAll('.clone-item').forEach(other => {
       if (other === dragEl) return;
@@ -733,46 +695,44 @@ document.addEventListener('pointermove', e => {
       const oTop = oRect.top - rect.top;
       const oRight = oLeft + oRect.width;
       const oBottom = oTop + oRect.height;
-      const oCx = oLeft + oRect.width/2;
-      const oCy = oTop + oRect.height/2;
 
-      // 좌우 변 스냅
-      if (Math.abs(myRight - oLeft) < SNAP_DISTANCE && rangesOverlap(myTop, myBottom, oTop-15, oBottom+15)) {
-        snapX = oLeft - myW; isSnapping = true;
+      const myLeft = x, myTop = y;
+      const myRight = x + myW, myBottom = y + myH;
+
+      // 변과 변이 서로 닿게 (좌우)
+      if (Math.abs(myRight - oLeft) < SNAP_DISTANCE &&
+          rangesOverlap(myTop, myBottom, oTop - 10, oBottom + 10)) {
+        snapX = oLeft - myW; snapped = true;
+      } else if (Math.abs(myLeft - oRight) < SNAP_DISTANCE &&
+                 rangesOverlap(myTop, myBottom, oTop - 10, oBottom + 10)) {
+        snapX = oRight; snapped = true;
       }
-      else if (Math.abs(myLeft - oRight) < SNAP_DISTANCE && rangesOverlap(myTop, myBottom, oTop-15, oBottom+15)) {
-        snapX = oRight; isSnapping = true;
+      // 변과 변이 서로 닿게 (위아래)
+      if (Math.abs(myBottom - oTop) < SNAP_DISTANCE &&
+          rangesOverlap(myLeft, myRight, oLeft - 10, oRight + 10)) {
+        snapY = oTop - myH; snapped = true;
+      } else if (Math.abs(myTop - oBottom) < SNAP_DISTANCE &&
+                 rangesOverlap(myLeft, myRight, oLeft - 10, oRight + 10)) {
+        snapY = oBottom; snapped = true;
       }
-      // 위아래 변 스냅
-      if (Math.abs(myBottom - oTop) < SNAP_DISTANCE && rangesOverlap(myLeft, myRight, oLeft-15, oRight+15)) {
-        snapY = oTop - myH; isSnapping = true;
-      }
-      else if (Math.abs(myTop - oBottom) < SNAP_DISTANCE && rangesOverlap(myLeft, myRight, oLeft-15, oRight+15)) {
-        snapY = oBottom; isSnapping = true;
-      }
-      // 같은 변 정렬 스냅
-      if (Math.abs(myLeft - oLeft) < SNAP_DISTANCE) { snapX = oLeft; isSnapping = true; }
-      else if (Math.abs(myRight - oRight) < SNAP_DISTANCE) { snapX = oRight - myW; isSnapping = true; }
-      if (Math.abs(myTop - oTop) < SNAP_DISTANCE) { snapY = oTop; isSnapping = true; }
-      else if (Math.abs(myBottom - oBottom) < SNAP_DISTANCE) { snapY = oBottom - myH; isSnapping = true; }
-      // 중앙 정렬 스냅
-      if (Math.abs(myCx - oCx) < SNAP_DISTANCE) { snapX = oCx - myW/2; isSnapping = true; }
-      if (Math.abs(myCy - oCy) < SNAP_DISTANCE) { snapY = oCy - myH/2; isSnapping = true; }
+      // 모서리 정렬
+      if (Math.abs(myLeft - oLeft) < SNAP_DISTANCE) { snapX = oLeft; snapped = true; }
+      else if (Math.abs(myRight - oRight) < SNAP_DISTANCE) { snapX = oRight - myW; snapped = true; }
+      if (Math.abs(myTop - oTop) < SNAP_DISTANCE) { snapY = oTop; snapped = true; }
+      else if (Math.abs(myBottom - oBottom) < SNAP_DISTANCE) { snapY = oBottom - myH; snapped = true; }
     });
 
     if (snapX !== null) x = snapX;
     if (snapY !== null) y = snapY;
 
-    if (isSnapping) {
-      if (!dragEl.dataset.snapping) {
+    if (snapped) {
+      if (!dragEl.classList.contains('snapping')) {
         dragEl.classList.add('snapping');
-        dragEl.dataset.snapping = '1';
         playSnap();
-        showMagnetPulse(x + myW/2, y + myH/2);
+        showMagnetPulse(x + dragEl.offsetWidth/2, y + dragEl.offsetHeight/2);
       }
     } else {
       dragEl.classList.remove('snapping');
-      delete dragEl.dataset.snapping;
     }
   }
 
@@ -793,15 +753,26 @@ function showMagnetPulse(x, y) {
   setTimeout(() => pulse.remove(), 600);
 }
 
-document.addEventListener('pointerup', () => {
+// 4. 드래그 종료
+canvasArea.addEventListener('pointerup', e => {
   if (isDragging && dragEl) {
     dragEl.classList.remove('snapping');
-    delete dragEl.dataset.snapping;
-    isDragging = false; dragEl = null;
+    isDragging = false;
+    dragEl = null;
+    activePointerId = null;
+    try { canvasArea.releasePointerCapture(e.pointerId); } catch(err){}
+  }
+});
+canvasArea.addEventListener('pointercancel', () => {
+  if (isDragging && dragEl) {
+    dragEl.classList.remove('snapping');
+    isDragging = false;
+    dragEl = null;
+    activePointerId = null;
   }
 });
 
-// Transform helpers
+// === 변형 (회전, 반전, 크기) ===
 function applyTransform(el) {
   const r = parseFloat(el.dataset.rotation || 0);
   const s = parseFloat(el.dataset.scale || 1);
@@ -812,22 +783,30 @@ function applyTransform(el) {
 document.getElementById('btn-rotate').addEventListener('click', () => {
   if (!selectedEl) return;
   let r = (parseInt(selectedEl.dataset.rotation || 0) + 45) % 360;
-  selectedEl.dataset.rotation = r; applyTransform(selectedEl); playClick();
+  selectedEl.dataset.rotation = r;
+  applyTransform(selectedEl);
+  playClick();
 });
 document.getElementById('btn-flip').addEventListener('click', () => {
   if (!selectedEl) return;
   let sx = parseFloat(selectedEl.dataset.scaleX || 1) * -1;
-  selectedEl.dataset.scaleX = sx; applyTransform(selectedEl); playClick();
+  selectedEl.dataset.scaleX = sx;
+  applyTransform(selectedEl);
+  playClick();
 });
 document.getElementById('btn-bigger').addEventListener('click', () => {
   if (!selectedEl) return;
   let s = Math.min(2.5, parseFloat(selectedEl.dataset.scale || 1) * 1.15);
-  selectedEl.dataset.scale = s; applyTransform(selectedEl); playClick();
+  selectedEl.dataset.scale = s;
+  applyTransform(selectedEl);
+  playClick();
 });
 document.getElementById('btn-smaller').addEventListener('click', () => {
   if (!selectedEl) return;
   let s = Math.max(0.3, parseFloat(selectedEl.dataset.scale || 1) / 1.15);
-  selectedEl.dataset.scale = s; applyTransform(selectedEl); playClick();
+  selectedEl.dataset.scale = s;
+  applyTransform(selectedEl);
+  playClick();
 });
 document.getElementById('btn-duplicate').addEventListener('click', () => {
   if (!selectedEl) return;
@@ -837,23 +816,23 @@ document.getElementById('btn-duplicate').addEventListener('click', () => {
   clone.style.top = (parseFloat(selectedEl.style.top) + 30) + 'px';
   canvasArea.appendChild(clone);
   setupCloneInteraction(clone);
-  document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
-  clone.classList.add('selected');
-  selectedEl = clone;
+  selectShape(clone);
   playClick();
 });
 document.getElementById('btn-delete').addEventListener('click', () => {
   if (!selectedEl) return;
-  selectedEl.remove(); selectedEl = null; playClick();
+  selectedEl.remove();
+  selectedEl = null;
+  playClick();
 });
 document.getElementById('btn-clear').addEventListener('click', () => {
-  if (confirm('정말 모두 지울까요?')) {
-    document.querySelectorAll('.clone-item').forEach(c => c.remove());
-    selectedEl = null; playClick();
-  }
+  if (!confirm('정말 모두 지울까요?')) return;
+  document.querySelectorAll('.clone-item').forEach(c => c.remove());
+  selectedEl = null;
+  playClick();
 });
 
-// Toggles
+// === Toggle ===
 document.getElementById('toggle-magnet').addEventListener('click', () => {
   isMagnetOn = !isMagnetOn;
   document.getElementById('toggle-magnet').classList.toggle('on', isMagnetOn);
@@ -866,18 +845,7 @@ document.getElementById('toggle-grid').addEventListener('click', () => {
   playClick();
 });
 
-// Idea cards
-document.querySelectorAll('.idea-card').forEach(c => {
-  c.addEventListener('click', () => {
-    const name = c.querySelector('.name').innerText;
-    const titleInput = document.getElementById('artwork-title');
-    titleInput.value = name;
-    speak(`${name} 만들기에 도전해보세요!`);
-    playClick();
-  });
-});
-
-// Start
+// === Start ===
 document.getElementById('btn-start').addEventListener('click', async () => {
   initAudioCtx();
   const sel = document.getElementById('student-select');
@@ -898,7 +866,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// Finish (capture canvas)
+// === Finish ===
 document.getElementById('btn-finish').addEventListener('click', async () => {
   const shapes = document.querySelectorAll('.clone-item');
   if (shapes.length === 0) {
@@ -918,7 +886,7 @@ document.getElementById('btn-finish').addEventListener('click', async () => {
   showScreen('screen-describe');
 });
 
-// Describe recording
+// === Describe Recording ===
 const descTextarea = document.getElementById('stt-describe');
 const descMicBtn = document.getElementById('mic-describe');
 const descPlayBtn = document.getElementById('play-describe');
@@ -927,7 +895,6 @@ const submitBtn = document.getElementById('btn-submit');
 descTextarea.addEventListener('input', () => {
   if (descTextarea.value.trim().length > 0) submitBtn.style.display = 'inline-flex';
 });
-
 descPlayBtn.addEventListener('click', () => {
   if (lastBlobUrl) new Audio(lastBlobUrl).play();
 });
@@ -991,7 +958,7 @@ descMicBtn.addEventListener('click', async () => {
   }
 });
 
-// Submit
+// === Submit ===
 submitBtn.addEventListener('click', async () => {
   appData.description = descTextarea.value.trim();
   if (!appData.description) appData.description = '(설명 없음)';
@@ -1045,7 +1012,6 @@ function showRewardConfetti() {
   }
   setTimeout(() => { overlay.style.display = 'none'; }, 3000);
 }
-
 </script>
 </body>
 </html>
