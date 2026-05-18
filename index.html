@@ -241,6 +241,32 @@
   .stars { display:flex; gap:10px; font-size:55px; color:#ddd; cursor:pointer; margin:10px 0; justify-content:center; }
   .star:hover, .star.active { color:var(--accent); }
 
+  /* 내 작품 카드 */
+  .my-work-card {
+    background:white; border-radius:18px; padding:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1); display:flex; gap:20px;
+    border:3px solid #a55eea;
+  }
+  .my-work-card.needs-fix { border-color:#ff6b6b; background:#fff5f5; }
+  .my-work-card img {
+    width:200px; height:160px; object-fit:contain;
+    background:#f8f9fa; border-radius:12px; flex-shrink:0;
+  }
+  .my-work-info { flex:1; }
+  .my-work-info h4 { font-size:22px; margin:0 0 6px 0; color:#333; }
+  .fix-banner {
+    background:#ff6b6b; color:white; border-radius:12px;
+    padding:12px 16px; margin:10px 0; font-size:18px; font-weight:bold;
+  }
+  .ok-banner {
+    background:#26de81; color:white; border-radius:12px;
+    padding:12px 16px; margin:10px 0; font-size:18px; font-weight:bold;
+  }
+  .my-comments {
+    margin-top:10px; max-height:120px; overflow-y:auto;
+  }
+  .my-comments .comment-box { background:#f3effc; }
+
   /* 갤러리 */
   .gallery-grid {
     display:grid; grid-template-columns:repeat(3, 1fr); gap:18px;
@@ -474,12 +500,23 @@
 
   <!-- 갤러리 -->
   <div id="screen-gallery" class="screen">
-    <h2>🖼️ 친구들의 작품 갤러리</h2>
-    <p class="subtitle">친구 작품을 눌러서 칭찬 댓글과 평가를 남겨보세요!</p>
+    <h2>🖼️ 작품 갤러리</h2>
     <div id="gallery-loading" style="text-align:center; font-size:20px; color:#888; padding:40px;">⏳ 작품을 불러오는 중...</div>
-    <div class="gallery-grid" id="gallery-grid"></div>
+
+    <!-- 내 작품 섹션 -->
+    <div id="my-work-section" style="display:none; width:100%; margin-bottom:25px;">
+      <h3 style="font-size:24px; color:#a55eea; margin:5px 0 12px 0;">🧑‍🎨 내 작품</h3>
+      <div id="my-work-area"></div>
+    </div>
+
+    <!-- 친구 작품 섹션 -->
+    <div id="friends-section" style="display:none; width:100%;">
+      <h3 style="font-size:24px; color:#0984e3; margin:5px 0 12px 0;">👬 친구들 작품 — 눌러서 평가해 주세요!</h3>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+
     <div style="text-align:center; margin-top:20px;">
-      <button class="btn" id="gallery-back">⬅️ 내 작업으로 돌아가기</button>
+      <button class="btn" id="gallery-back">⬅️ 돌아가기</button>
     </div>
   </div>
 
@@ -566,6 +603,8 @@ let lastBlobUrl = null;
 let selfStar = 0;
 let selfChecks = {};
 let myWorkId = '';
+let myWorkVersion = 1;       // 현재 작품 버전
+let myOriginalWorkId = '';   // 첫 작품의 ID (수정해도 유지 — 추적용)
 let peerChecks = {};
 let currentPeerWork = null;
 
@@ -1146,7 +1185,7 @@ function showFeedbackPopup(opt) {
 }
 
 document.getElementById('fb-redo').addEventListener('click', () => {
-  // 작품 지우고 스튜디오로 복귀
+  // 작품 지우고 스튜디오로 복귀 (새 버전 — 아직 제출 전이므로 버전 유지)
   document.getElementById('feedback-modal').classList.remove('show');
   document.querySelectorAll('.clone-item').forEach(c => c.remove());
   selectedEl = null;
@@ -1179,10 +1218,15 @@ async function submitArtwork() {
   document.getElementById('loading').style.display = 'flex';
 
   myWorkId = 'work_' + Date.now();
+  // 첫 작품이면 원본 ID = 자기 자신, 수정본이면 기존 원본 ID 유지
+  if (!myOriginalWorkId) myOriginalWorkId = myWorkId;
+
   const payload = {
     source:'studio',
     action:'submit',
     workId: myWorkId,
+    originalWorkId: myOriginalWorkId,
+    version: myWorkVersion,
     studentName: appData.studentName,
     artworkTitle: appData.artworkTitle,
     description: appData.description,
@@ -1227,7 +1271,10 @@ document.getElementById('gallery-back').addEventListener('click', () => {
 async function openGallery() {
   showScreen('screen-gallery');
   document.getElementById('gallery-loading').style.display = 'block';
+  document.getElementById('my-work-section').style.display = 'none';
+  document.getElementById('friends-section').style.display = 'none';
   document.getElementById('gallery-grid').innerHTML = '';
+  document.getElementById('my-work-area').innerHTML = '';
 
   if (!GAS_URL || GAS_URL.includes('PASTE')) {
     document.getElementById('gallery-loading').innerText = '갤러리를 불러올 수 없어요.';
@@ -1244,32 +1291,138 @@ async function openGallery() {
 }
 
 function renderGallery(works) {
+  // 내 작품 / 친구 작품 분리 (이름 기준)
+  const myWorks = works.filter(w => w.author === currentStudent);
+  // 친구 작품: 같은 originalWorkId 중 최신 버전만 보이게
+  const friendAll = works.filter(w => w.author !== currentStudent);
+  const friendLatest = {};
+  friendAll.forEach(w => {
+    const key = w.originalWorkId || w.workId;
+    if (!friendLatest[key] || (w.version || 1) > (friendLatest[key].version || 1)) {
+      friendLatest[key] = w;
+    }
+  });
+  const friendWorks = Object.keys(friendLatest).map(k => friendLatest[k]);
+
+  // === 내 작품 섹션 ===
+  const myArea = document.getElementById('my-work-area');
+  myArea.innerHTML = '';
+  if (myWorks.length > 0) {
+    document.getElementById('my-work-section').style.display = 'block';
+    // 최신 버전 작품
+    let w = myWorks[0];
+    myWorks.forEach(mw => { if ((mw.version || 1) > (w.version || 1)) w = mw; });
+
+    const noCount = w.maxNoCount || 0;
+    const needsFix = (w.reviewCount > 0 && noCount >= 2);
+
+    const card = document.createElement('div');
+    card.className = 'my-work-card' + (needsFix ? ' needs-fix' : '');
+
+    let banner = '';
+    if (w.reviewCount === 0) {
+      banner = `<div style="background:#f1f2f6; border-radius:12px; padding:12px 16px; margin:10px 0; font-size:17px; color:#888;">⏳ 아직 친구들의 평가를 기다리고 있어요.</div>`;
+    } else if (needsFix) {
+      banner = `<div class="fix-banner">🔴 친구들이 수정을 제안했어요! 피드백을 보고 작품을 다시 만들어 볼까요?</div>`;
+    } else {
+      banner = `<div class="ok-banner">✅ 친구들이 작품을 칭찬했어요! 잘했어요!</div>`;
+    }
+
+    let commentsHtml = '';
+    if (w.comments && w.comments.length) {
+      commentsHtml = '<div class="my-comments"><b style="font-size:16px; color:#666;">💬 친구들의 댓글</b>';
+      w.comments.forEach(c => {
+        commentsHtml += `<div class="comment-box"><div class="comment-author">${c.author}</div><div class="comment-text">${c.text}</div></div>`;
+      });
+      commentsHtml += '</div>';
+    }
+
+    const versionBadge = (w.version > 1) ? ` <span style="background:#a55eea; color:white; font-size:14px; padding:2px 10px; border-radius:20px;">${w.version}번째 버전</span>` : '';
+
+    card.innerHTML = `
+      <img src="${w.imageUrl}" onerror="this.style.background='#eee'">
+      <div class="my-work-info">
+        <h4>"${w.title || '(제목 없음)'}"${versionBadge}</h4>
+        <div style="font-size:16px; color:#888;">⭐ 자기평가 ${w.selfStar || '-'} · 💬 댓글 ${w.commentCount || 0}개 · 👀 평가 ${w.reviewCount || 0}명</div>
+        ${banner}
+        ${commentsHtml}
+        ${needsFix ? '<button class="btn btn-red" id="my-fix-btn" style="font-size:18px; padding:10px 22px; margin-top:8px;">작품 다시 만들기 🔄</button>' : ''}
+      </div>`;
+    myArea.appendChild(card);
+
+    // 이전 버전들 (있으면 작게)
+    if (myWorks.length > 1) {
+      const prevWrap = document.createElement('div');
+      prevWrap.style.cssText = 'margin-top:12px;';
+      prevWrap.innerHTML = '<div style="font-size:15px; color:#999; margin-bottom:6px;">📚 이전 버전 (보관됨)</div>';
+      const prevRow = document.createElement('div');
+      prevRow.style.cssText = 'display:flex; gap:10px; flex-wrap:wrap;';
+      myWorks.filter(mw => mw.workId !== w.workId)
+        .sort((a,b) => (a.version||1)-(b.version||1))
+        .forEach(pw => {
+          const thumb = document.createElement('div');
+          thumb.style.cssText = 'text-align:center;';
+          thumb.innerHTML = `
+            <img src="${pw.imageUrl}" onerror="this.style.background='#eee'" style="width:90px; height:75px; object-fit:contain; background:#f8f9fa; border-radius:8px; border:2px solid #ddd;">
+            <div style="font-size:13px; color:#999;">${pw.version || 1}번째</div>`;
+          prevRow.appendChild(thumb);
+        });
+      prevWrap.appendChild(prevRow);
+      myArea.appendChild(prevWrap);
+    }
+
+    if (needsFix) {
+      document.getElementById('my-fix-btn').addEventListener('click', () => {
+        document.querySelectorAll('.clone-item').forEach(c => c.remove());
+        selectedEl = null;
+        document.getElementById('artwork-title').value = '';
+        descTextarea.value = '';
+        toSelfEvalBtn.style.display = 'none';
+        selfStar = 0;
+        document.querySelectorAll('#self-stars .star').forEach(st => st.classList.remove('active'));
+        myWorkVersion = (w.version || 1) + 1;
+        myOriginalWorkId = w.originalWorkId || w.workId;
+        myWorkId = '';
+        alert('🔄 새 버전을 만들어 볼까요?\n친구들의 의견을 떠올리며 작품을 다시 만들어보세요!\n(이전 작품은 그대로 보관돼요)');
+        showScreen('screen-studio');
+      });
+    }
+  }
+
+  // === 친구 작품 섹션 ===
   const grid = document.getElementById('gallery-grid');
   grid.innerHTML = '';
-  if (works.length === 0) {
-    grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; font-size:18px;">아직 작품이 없어요. 첫 작품을 만들어보세요!</p>';
-    return;
+  document.getElementById('friends-section').style.display = 'block';
+  if (friendWorks.length === 0) {
+    grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; font-size:18px;">아직 친구들의 작품이 없어요.</p>';
+  } else {
+    friendWorks.forEach(w => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      const vBadge = (w.version > 1) ? `<span style="background:#a55eea;color:white;font-size:12px;padding:1px 8px;border-radius:12px;">v${w.version}</span>` : '';
+      item.innerHTML = `
+        <img src="${w.imageUrl}" onerror="this.style.background='#eee'">
+        <div class="gi-info">
+          <div class="gi-title">${w.title || '(제목 없음)'} ${vBadge}</div>
+          <div class="gi-author">🧑‍🎨 ${w.author}</div>
+          <div class="gi-meta">
+            <span>⭐ ${w.selfStar || '-'}</span>
+            <span>💬 ${w.commentCount || 0}</span>
+          </div>
+        </div>`;
+      item.addEventListener('click', () => openDetail(w));
+      grid.appendChild(item);
+    });
   }
-  works.forEach(w => {
-    const item = document.createElement('div');
-    item.className = 'gallery-item';
-    item.innerHTML = `
-      <img src="${w.imageUrl}" onerror="this.style.background='#eee'">
-      <div class="gi-info">
-        <div class="gi-title">${w.title || '(제목 없음)'}</div>
-        <div class="gi-author">🧑‍🎨 ${w.author}</div>
-        <div class="gi-meta">
-          <span>⭐ ${w.selfStar || '-'}</span>
-          <span>💬 ${w.commentCount || 0}</span>
-        </div>
-      </div>`;
-    item.addEventListener('click', () => openDetail(w));
-    grid.appendChild(item);
-  });
 }
 
 // === 작품 상세 + 동료평가 ===
 function openDetail(work) {
+  // 자기 작품은 평가 불가 (안전장치)
+  if (work.author === currentStudent) {
+    alert('내 작품은 위쪽 "내 작품" 칸에서 확인할 수 있어요!');
+    return;
+  }
   currentPeerWork = work;
   peerChecks = {};
   document.getElementById('detail-title').innerText = work.title || '(제목 없음)';
@@ -1357,28 +1510,19 @@ document.getElementById('peer-submit').addEventListener('click', async () => {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('detail-modal').classList.remove('show');
 
-  // 내가 만든 작품을 내가 평가한 경우 + 기준 미달 → 수정 기회
-  if (currentPeerWork.workId === myWorkId && noCount >= 2) {
-    showFeedbackPopup({
-      good:false, icon:'🔴',
-      title:'작품을 수정해 볼까요?',
-      text:'평가 기준에 맞지 않는 부분이 있어요. 친구의 피드백을 보고 고쳐보세요!',
-      list:['도형이 다 안 들어갔어요','다양한 모양을 더 써보세요','설명을 자세히 다시 해보세요'],
-      showRedo:true,
-      keepText:'괜찮아요',
-      mode:'peer-redo'
-    });
-  } else {
-    showFeedbackPopup({
-      good:true, icon:'💖',
-      title:'평가 고마워요!',
-      text:'친구에게 소중한 의견을 남겼어요.',
-      list:[],
-      showRedo:false,
-      keepText:'확인',
-      mode:'peer-info'
-    });
-  }
+  // 평가 완료 → 고마움 표시
+  showFeedbackPopup({
+    good:true, icon:'💖',
+    title:'평가 고마워요!',
+    text:'친구에게 소중한 의견을 남겼어요. 친구가 더 좋은 작품을 만들 수 있을 거예요!',
+    list:[],
+    showRedo:false,
+    keepText:'확인',
+    mode:'peer-info'
+  });
+
+  // 갤러리 새로고침 (평가 수 반영)
+  setTimeout(openGallery, 300);
 });
 
 function showRewardConfetti() {
