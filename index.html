@@ -772,7 +772,7 @@ document.querySelectorAll('.shape-item').forEach(item => {
     e.preventDefault();
     const type = item.dataset.type;
     const clone = document.createElement('div');
-    clone.className = 'clone-item';
+    clone.className = 'clone-item shape-' + type;
     clone.dataset.type = type;
     clone.dataset.rotation = 0;
     clone.dataset.scaleX = 1;
