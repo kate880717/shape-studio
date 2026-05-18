@@ -37,22 +37,27 @@
     display:flex; justify-content:space-between; align-items:center;
     padding:0 25px; flex-shrink:0; border-bottom:2px solid rgba(255,255,255,0.8);
   }
-  header h1 { margin:0; font-size:30px; color:var(--primary); }
-  .speaker-btn {
-    background:#fff; border:none; width:50px; height:50px; border-radius:50%;
-    font-size:22px; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  header h1 { margin:0; font-size:28px; color:var(--primary); }
+  .header-right { display:flex; gap:10px; align-items:center; }
+  .speaker-btn, .gallery-btn {
+    background:#fff; border:none; height:50px; border-radius:25px;
+    font-size:18px; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    padding:0 18px; font-family:'Jua',sans-serif; display:flex;
+    align-items:center; gap:6px;
   }
+  .speaker-btn { width:50px; padding:0; justify-content:center; font-size:22px; }
   .speaker-btn.on { background:var(--primary); color:white; }
+  .gallery-btn { background:#a55eea; color:white; }
 
   .screen {
     flex:1; display:none; flex-direction:column; padding:20px 30px;
-    overflow:hidden; animation:fadeIn 0.5s ease;
+    overflow-y:auto; animation:fadeIn 0.5s ease;
   }
   .screen.active { display:flex; }
   @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
 
   h2 { font-size:30px; color:#333; margin:0 0 15px 0; text-align:center; }
-  .subtitle { font-size:20px; color:#666; text-align:center; margin-bottom:15px; }
+  .subtitle { font-size:22px; color:#666; text-align:center; margin-bottom:15px; }
 
   .btn {
     padding:12px 30px; font-size:22px; border:none; border-radius:50px;
@@ -63,14 +68,29 @@
   .btn:hover { transform:translateY(-2px); }
   .btn-red { background:var(--primary); box-shadow:0 8px 18px rgba(255,107,107,0.3); }
   .btn-yellow { background:var(--accent); color:#333; }
+  .btn-purple { background:#a55eea; box-shadow:0 8px 18px rgba(165,94,234,0.3); }
 
-  /* Start screen */
+  /* Start */
   #screen-start { justify-content:center; align-items:center; }
-  #screen-start h1 { font-size:60px; color:var(--primary); text-shadow:2px 2px 4px rgba(255,255,255,0.8); margin:10px 0; }
+  #screen-start h1 { font-size:56px; color:var(--primary); text-shadow:2px 2px 4px rgba(255,255,255,0.8); margin:10px 0; }
   #student-select {
     font-size:24px; padding:12px 20px; border-radius:15px; border:3px solid var(--secondary);
     margin:15px 0; min-width:280px; background:white; cursor:pointer; font-family:'Jua',sans-serif;
   }
+  .goal-box {
+    width:100%; max-width:760px; background:#fff9c4;
+    border:4px solid #fcc419; border-radius:25px;
+    padding:20px 28px; margin:8px 0 14px 0;
+  }
+  .goal-title {
+    font-size:28px; font-weight:bold; color:#7a5c00;
+    text-align:center; margin-bottom:10px;
+  }
+  .goal-text {
+    font-size:24px; font-weight:bold; color:#7a5c00;
+    line-height:1.7; margin:0; text-align:center;
+  }
+  .goal-hl { background:white; padding:2px 12px; border-radius:8px; color:#333; }
 
   /* Studio */
   #screen-studio { padding:15px 20px; }
@@ -85,7 +105,6 @@
   .tool-section:last-child { border-bottom:none; padding-bottom:0; }
   .tool-section h4 { margin:0 0 10px 0; font-size:20px; color:#333; text-align:center; font-weight:bold; }
 
-  /* 모양 바구니 */
   .shape-grid {
     display:flex; flex-direction:row; gap:14px;
     align-items:center; justify-content:center;
@@ -96,27 +115,15 @@
   }
   .shape-item:hover { transform:scale(1.1); }
   .shape-item:active { cursor:grabbing; }
-
-  .shape-circle {
-    width:60px; height:60px; border-radius:50%;
-    background:var(--circle-color);
-  }
-  .shape-square {
-    width:60px; height:60px;
-    background:var(--square-color);
-  }
+  .shape-circle { width:60px; height:60px; border-radius:50%; background:var(--circle-color); }
+  .shape-square { width:60px; height:60px; background:var(--square-color); }
   .shape-triangle {
     width:60px; height:60px;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,0 0,100 100,100' fill='%23d63031'/></svg>");
     background-size:contain; background-repeat:no-repeat; background-position:center;
   }
+  .palette-help { font-size:16px; color:#555; text-align:center; margin:8px 0 0 0; font-weight:bold; }
 
-  .palette-help {
-    font-size:16px; color:#555; text-align:center; margin:8px 0 0 0;
-    font-weight:bold; line-height:1.3;
-  }
-
-  /* 색깔 */
   .color-grid { display:flex; gap:7px; flex-wrap:nowrap; justify-content:center; }
   .color-chip {
     width:28px; height:28px; border-radius:50%; cursor:pointer;
@@ -126,10 +133,7 @@
   .color-chip:hover { transform:scale(1.2); }
   .color-chip.selected { border-color:#333; transform:scale(1.25); }
 
-  /* 액션 버튼 - 2x2 그리드 */
-  .action-grid {
-    display:grid; grid-template-columns:1fr 1fr; gap:8px;
-  }
+  .action-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .action-btn {
     padding:11px 6px; border-radius:10px; border:none; font-size:16px;
     font-weight:bold; cursor:pointer; background:#f1f2f6;
@@ -140,64 +144,41 @@
   .action-btn:active { transform:scale(0.95); }
   .action-btn.danger { background:#ff7675; color:white; }
   .action-btn.full { grid-column:1 / -1; padding:12px; }
+  .usage-tips { font-size:15px; color:#444; line-height:1.6; margin:0; padding:0 4px; }
 
-  /* 사용 방법 텍스트 */
-  .usage-tips {
-    font-size:15px; color:#444; line-height:1.6; margin:0; padding:0 4px;
-  }
-  .usage-tips b { font-size:16px; }
-
-  /* Canvas */
   .canvas-wrap { flex:1; display:flex; flex-direction:column; min-width:0; }
   .canvas-area {
     flex:1; background:white; border-radius:20px; position:relative;
     overflow:hidden; box-shadow:inset 0 0 20px rgba(0,0,0,0.05);
-    border:3px solid var(--secondary); min-height:0;
-    touch-action:none;
+    border:3px solid var(--secondary); min-height:0; touch-action:none;
   }
-
-  .clone-item {
-    position:absolute; touch-action:none;
-    transform-origin:center center;
-  }
+  .clone-item { position:absolute; touch-action:none; transform-origin:center center; }
   .clone-item.selected {
     outline:4px dashed var(--primary); z-index:101 !important;
     filter:drop-shadow(0 0 10px rgba(255,107,107,0.5));
   }
-
-  /* 회전 핸들 (원본 코드 방식) */
   .rotate-handle {
-    position:absolute; top:-32px; left:50%;
-    transform:translateX(-50%);
-    width:32px; height:32px; background:#fff;
-    border:3px solid var(--primary); border-radius:50%;
-    cursor:grab; display:none; z-index:102;
+    position:absolute; top:-32px; left:50%; transform:translateX(-50%);
+    width:32px; height:32px; background:#fff; border:3px solid var(--primary);
+    border-radius:50%; cursor:grab; display:none; z-index:102;
   }
   .rotate-handle::after {
     content:'↻'; position:absolute; top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    font-size:18px; color:var(--primary); font-weight:bold;
+    transform:translate(-50%,-50%); font-size:18px; color:var(--primary); font-weight:bold;
   }
   .clone-item.selected .rotate-handle { display:block; }
-
-  /* 크기조절 핸들 */
   .resize-handle {
     position:absolute; bottom:-12px; right:-12px;
-    width:28px; height:28px; background:#fff;
-    border:3px solid var(--secondary); border-radius:50%;
-    cursor:nwse-resize; display:none; z-index:102;
+    width:28px; height:28px; background:#fff; border:3px solid var(--secondary);
+    border-radius:50%; cursor:nwse-resize; display:none; z-index:102;
   }
   .resize-handle::after {
     content:'⤢'; position:absolute; top:50%; left:50%;
-    transform:translate(-50%,-50%);
-    font-size:14px; color:var(--secondary); font-weight:bold;
+    transform:translate(-50%,-50%); font-size:14px; color:var(--secondary); font-weight:bold;
   }
   .clone-item.selected .resize-handle { display:block; }
 
-  /* Bottom bar */
-  .bottom-bar {
-    margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  }
+  .bottom-bar { margin-top:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
   .bottom-bar input {
     flex:1; min-width:200px; padding:10px 15px; font-size:18px;
     border-radius:12px; border:2px solid #ccc;
@@ -205,8 +186,8 @@
   }
 
   textarea.stt-text {
-    width:100%; height:60px; background:white; border-radius:12px;
-    padding:10px; font-size:18px; color:#333;
+    width:100%; background:white; border-radius:12px;
+    padding:12px; font-size:20px; color:#333;
     border:2px dashed #ccc; resize:none; outline:none;
     user-select:text; -webkit-user-select:text;
     font-family:'Jua',sans-serif; line-height:1.4;
@@ -225,24 +206,133 @@
     100% { transform:scale(1); box-shadow:0 0 0 0 rgba(255,107,107,0); }
   }
 
+  /* 예시 문장 카드 */
+  .example-card {
+    background:#fffacd; border-radius:15px; padding:14px 18px;
+    border:2px dashed #f9ca24; margin-bottom:12px;
+  }
+  .example-card h3 { margin:0 0 8px 0; color:#e67e22; font-size:20px; }
+  .example-list { display:flex; flex-direction:column; gap:6px; max-height:150px; overflow-y:auto; }
+  .example-item {
+    background:white; padding:10px 14px; border-radius:10px; font-size:19px;
+    color:#333; cursor:pointer; transition:all 0.2s;
+  }
+  .example-item:hover { transform:translateX(5px); background:#fff3cd; }
+
+  /* 자기평가 체크리스트 */
+  .checklist {
+    width:100%; max-width:700px; display:flex; flex-direction:column; gap:10px;
+  }
+  .check-item {
+    background:white; border-radius:15px; padding:15px 20px;
+    display:flex; justify-content:space-between; align-items:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.06); gap:15px;
+  }
+  .check-q { font-size:19px; color:#333; flex:1; }
+  .check-buttons { display:flex; gap:8px; flex-shrink:0; }
+  .check-btn {
+    padding:8px 20px; border-radius:30px; border:3px solid #ddd;
+    background:white; font-size:18px; cursor:pointer; font-family:'Jua',sans-serif;
+    font-weight:bold; transition:all 0.2s;
+  }
+  .check-btn.yes.selected { background:#26de81; border-color:#26de81; color:white; }
+  .check-btn.no.selected { background:#ff7675; border-color:#ff7675; color:white; }
+
+  .stars { display:flex; gap:10px; font-size:55px; color:#ddd; cursor:pointer; margin:10px 0; justify-content:center; }
+  .star:hover, .star.active { color:var(--accent); }
+
+  /* 갤러리 */
+  .gallery-grid {
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:18px;
+    width:100%; padding:5px;
+  }
+  .gallery-item {
+    background:white; border-radius:18px; overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1); cursor:pointer;
+    transition:all 0.2s; border:3px solid white;
+  }
+  .gallery-item:hover { transform:translateY(-5px); box-shadow:0 12px 28px rgba(0,0,0,0.15); }
+  .gallery-item img { width:100%; height:160px; object-fit:contain; background:#f8f9fa; }
+  .gallery-item .gi-info { padding:12px; }
+  .gallery-item .gi-title { font-size:18px; color:#333; font-weight:bold; margin-bottom:4px; }
+  .gallery-item .gi-author { font-size:14px; color:#888; }
+  .gallery-item .gi-meta {
+    display:flex; gap:10px; margin-top:6px; font-size:13px; color:#666;
+  }
+
+  /* 작품 상세 / 동료평가 모달 */
+  .modal-bg {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.6); z-index:200; display:none;
+    justify-content:center; align-items:center; padding:30px;
+  }
+  .modal-bg.show { display:flex; }
+  .modal-card {
+    background:white; border-radius:25px; padding:25px 30px;
+    max-width:850px; width:100%; max-height:90%; overflow-y:auto;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-card h2 { margin-top:0; }
+  .modal-close {
+    float:right; background:#eee; border:none; width:42px; height:42px;
+    border-radius:50%; font-size:22px; cursor:pointer;
+  }
+  .detail-img {
+    width:100%; max-height:280px; object-fit:contain;
+    background:#f8f9fa; border-radius:15px; margin-bottom:12px;
+  }
+
+  /* 평가 루브릭 */
+  .rubric {
+    width:100%; display:flex; flex-direction:column; gap:10px; margin:12px 0;
+  }
+  .rubric-item {
+    background:#f8f9fa; border-radius:12px; padding:13px 16px;
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+  }
+  .rubric-q { font-size:17px; color:#333; flex:1; }
+
+  /* 빨간 피드백 팝업 */
+  .feedback-popup {
+    background:white; border:5px solid #ff6b6b; border-radius:25px;
+    padding:30px 35px; max-width:550px; text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  }
+  .feedback-popup.good { border-color:#26de81; }
+  .feedback-popup h2 { margin-top:0; font-size:32px; }
+  .feedback-popup .fb-icon { font-size:70px; margin-bottom:10px; }
+  .feedback-popup ul {
+    text-align:left; font-size:19px; color:#444; line-height:1.6;
+    background:#fff5f5; border-radius:12px; padding:15px 15px 15px 40px;
+  }
+  .feedback-popup.good ul { background:#f0fff4; }
+
+  /* 댓글 */
+  .comment-box {
+    background:#f8f9fa; border-radius:12px; padding:12px 15px;
+    margin-bottom:8px;
+  }
+  .comment-author { font-size:15px; color:#a55eea; font-weight:bold; }
+  .comment-text { font-size:17px; color:#333; margin-top:3px; }
+
   #screen-end { justify-content:center; align-items:center; }
-  #screen-end h1 { font-size:50px; color:var(--primary); }
+  #screen-end h1 { font-size:48px; color:var(--primary); }
   #artwork-preview {
-    max-width:60%; max-height:300px; border-radius:15px;
+    max-width:55%; max-height:280px; border-radius:15px;
     box-shadow:0 10px 30px rgba(0,0,0,0.15); margin:15px 0;
   }
 
   #loading {
     position:fixed; top:0; left:0; width:100%; height:100%;
     background:rgba(255,255,255,0.85); backdrop-filter:blur(5px);
-    display:none; flex-direction:column; justify-content:center; align-items:center; z-index:200;
+    display:none; flex-direction:column; justify-content:center; align-items:center; z-index:400;
   }
   .spinner { width:70px; height:70px; border:8px solid #f3f3f3; border-top:8px solid var(--primary); border-radius:50%; animation:spin 1s linear infinite; }
   @keyframes spin { 0%{transform:rotate(0);} 100%{transform:rotate(360deg);} }
 
   #reward-overlay {
     position:fixed; top:0; left:0; width:100%; height:100%;
-    pointer-events:none; z-index:300; display:none;
+    pointer-events:none; z-index:500; display:none;
   }
   .confetti { position:absolute; font-size:32px; animation:fall 2.5s ease-out forwards; }
   @keyframes fall {
@@ -257,22 +347,33 @@
 
   <header>
     <h1>✨ 모양 만들기 스튜디오</h1>
-    <button class="speaker-btn" id="speaker-toggle">🔈</button>
+    <div class="header-right">
+      <button class="gallery-btn" id="gallery-btn">🖼️ 친구들 작품</button>
+      <button class="speaker-btn" id="speaker-toggle">🔈</button>
+    </div>
   </header>
 
   <!-- Start -->
   <div id="screen-start" class="screen active">
     <h1>🎨 모양 만들기 스튜디오</h1>
-    <p class="subtitle">도형을 끌어와 작품을 만들어 보아요!</p>
-    <p style="font-size:18px; color:#666;">🎯 도형을 자유롭게 회전·크기조절·이동할 수 있어요</p>
+
+    <div class="goal-box">
+      <div class="goal-title">🎯 오늘의 목표</div>
+      <p class="goal-text">
+        이 활동이 끝나면 우리는<br>
+        👉 여러 <span class="goal-hl">도형</span>으로 작품을 만들 수 있어요!<br>
+        👉 <span class="goal-hl">변</span>과 <span class="goal-hl">꼭짓점</span>을 넣어 설명할 수 있어요!<br>
+        👉 친구 작품을 <span class="goal-hl">평가</span>하고 응원할 수 있어요!
+      </p>
+    </div>
+
     <select id="student-select"><option value="">⏳ 학생 명단 불러오는 중...</option></select>
-    <button class="btn btn-red" id="btn-start" style="margin-top:15px;">시작하기 🚀</button>
+    <button class="btn btn-red" id="btn-start" style="margin-top:10px;">시작하기 🚀</button>
   </div>
 
   <!-- Studio -->
   <div id="screen-studio" class="screen">
     <div class="studio-layout">
-
       <div class="toolbox">
         <div class="tool-section">
           <h4>🧺 모양 바구니</h4>
@@ -322,7 +423,6 @@
 
       <div class="canvas-wrap">
         <div class="canvas-area" id="canvas-area"></div>
-
         <div class="bottom-bar">
           <input type="text" id="artwork-title" placeholder="🎨 작품 이름을 지어주세요!">
           <button class="btn btn-yellow" id="btn-finish" style="font-size:18px; padding:10px 22px;">완성! 설명하러 가기 ➡️</button>
@@ -332,23 +432,54 @@
   </div>
 
   <!-- Describe -->
-  <div id="screen-describe" class="screen" style="justify-content:center; align-items:center;">
-    <h2>🎨 멋진 작품이 완성됐어요!</h2>
-    <p class="subtitle">작품을 어떻게 만들었는지 설명해보세요!</p>
-    <div style="display:flex; gap:25px; align-items:flex-start; max-width:1100px; width:100%;">
+  <div id="screen-describe" class="screen">
+    <h2>🎨 작품을 설명해 볼까요?</h2>
+    <div style="display:flex; gap:25px; align-items:flex-start; max-width:1150px; width:100%; margin:0 auto;">
       <div style="flex:1; text-align:center;">
-        <img id="describe-preview" style="max-width:100%; max-height:350px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.15); border:3px solid white;">
+        <img id="describe-preview" style="max-width:100%; max-height:300px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.15); border:3px solid white;">
         <p style="font-size:24px; color:var(--primary); margin-top:10px; font-weight:bold;" id="describe-title"></p>
       </div>
       <div style="flex:1;">
-        <p style="font-size:18px; color:#666; margin-bottom:8px;">💬 어떤 모양을 사용했나요? 무엇을 만들었나요?</p>
-        <textarea class="stt-text" id="stt-describe" placeholder="🎤 마이크로 녹음하거나 키보드로 직접 써도 돼요!" style="height:140px; font-size:20px;"></textarea>
+        <div class="example-card">
+          <h3>📖 이렇게 설명해 보세요 (클릭하면 읽어줘요)</h3>
+          <div class="example-list" id="example-list"></div>
+        </div>
+        <p style="font-size:17px; color:#666; margin:8px 0;">💬 어떤 도형을 썼는지, 변과 꼭짓점을 넣어 설명해보세요!</p>
+        <textarea class="stt-text" id="stt-describe" placeholder="🎤 마이크로 녹음하거나 키보드로 직접 써도 돼요!" style="height:110px;"></textarea>
         <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
           <button class="mic-btn" id="mic-describe">🔴 녹음 시작</button>
           <button class="action-btn" id="play-describe" disabled style="font-size:14px; padding:10px 18px;">▶️ 다시 듣기</button>
+          <button class="btn" id="to-selfeval" style="display:none; font-size:18px; padding:10px 22px;">자기평가 하기 ➡️</button>
         </div>
-        <button class="btn btn-red" id="btn-submit" style="display:none; margin-top:15px;">🚀 제출하기</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 자기평가 -->
+  <div id="screen-selfeval" class="screen" style="align-items:center;">
+    <h2>🌱 스스로 평가해 볼까요?</h2>
+    <p class="subtitle">내 작품을 보고 솔직하게 답해주세요!</p>
+    <div class="checklist" id="self-checklist"></div>
+
+    <p style="font-size:20px; color:#444; margin:15px 0 5px 0; font-weight:bold;">⭐ 내 작품에 별점을 줘 보세요!</p>
+    <div class="stars" id="self-stars">
+      <span class="star" data-val="1">★</span>
+      <span class="star" data-val="2">★</span>
+      <span class="star" data-val="3">★</span>
+      <span class="star" data-val="4">★</span>
+      <span class="star" data-val="5">★</span>
+    </div>
+    <button class="btn btn-red" id="self-submit" style="display:none; margin-top:10px;">제출하고 갤러리에 올리기 🚀</button>
+  </div>
+
+  <!-- 갤러리 -->
+  <div id="screen-gallery" class="screen">
+    <h2>🖼️ 친구들의 작품 갤러리</h2>
+    <p class="subtitle">친구 작품을 눌러서 칭찬 댓글과 평가를 남겨보세요!</p>
+    <div id="gallery-loading" style="text-align:center; font-size:20px; color:#888; padding:40px;">⏳ 작품을 불러오는 중...</div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btn" id="gallery-back">⬅️ 내 작업으로 돌아가기</button>
     </div>
   </div>
 
@@ -357,13 +488,54 @@
     <h1>🎉 작품 제출 완료! 🎉</h1>
     <h2 id="end-name"></h2>
     <img id="artwork-preview" style="display:none;">
-    <p style="font-size:24px;">멋진 작품을 만들어줘서 고마워요!</p>
-    <button class="btn" onclick="location.reload()" style="margin-top:20px;">처음으로 🏠</button>
+    <p style="font-size:22px;">친구들 작품도 구경하고 응원해 주세요!</p>
+    <div style="display:flex; gap:15px; margin-top:20px;">
+      <button class="btn btn-purple" id="end-gallery">🖼️ 친구들 작품 보러가기</button>
+      <button class="btn" onclick="location.reload()">처음으로 🏠</button>
+    </div>
+  </div>
+
+  <!-- 작품 상세 + 동료평가 모달 -->
+  <div class="modal-bg" id="detail-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="detail-close">✕</button>
+      <h2 id="detail-title"></h2>
+      <p style="color:#888; margin-top:-8px; font-size:16px;" id="detail-author"></p>
+      <img class="detail-img" id="detail-img">
+      <p style="font-size:18px; background:#f8f9fa; padding:12px; border-radius:10px;" id="detail-desc"></p>
+
+      <h3 style="color:#a55eea; margin-bottom:5px;">✅ 친구 작품 평가하기</h3>
+      <p style="font-size:15px; color:#888; margin-top:0;">기준에 맞으면 '예', 아니면 '아니오'를 골라주세요.</p>
+      <div class="rubric" id="peer-rubric"></div>
+
+      <h3 style="color:#a55eea; margin-bottom:5px;">💬 칭찬 댓글 남기기</h3>
+      <textarea class="stt-text" id="peer-comment" placeholder="친구에게 칭찬이나 응원의 말을 남겨주세요!" style="height:70px; border-style:solid; border-color:#ddd;"></textarea>
+
+      <div id="peer-existing-comments" style="margin-top:12px;"></div>
+
+      <div style="text-align:center; margin-top:15px;">
+        <button class="btn btn-purple" id="peer-submit">평가 제출하기 ✅</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 빨간 피드백 팝업 -->
+  <div class="modal-bg" id="feedback-modal">
+    <div class="feedback-popup" id="feedback-popup">
+      <div class="fb-icon" id="fb-icon">🤔</div>
+      <h2 id="fb-title"></h2>
+      <p id="fb-text" style="font-size:19px; color:#555;"></p>
+      <ul id="fb-list"></ul>
+      <div style="display:flex; gap:12px; justify-content:center; margin-top:15px;">
+        <button class="btn btn-red" id="fb-redo" style="display:none;">작품 지우고 다시 만들기 🔄</button>
+        <button class="btn" id="fb-keep">확인</button>
+      </div>
+    </div>
   </div>
 
   <div id="loading">
     <div class="spinner"></div>
-    <h2 style="margin-top:20px;">작품을 저장하는 중...</h2>
+    <h2 style="margin-top:20px;" id="loading-text">저장하는 중...</h2>
   </div>
 
 </div>
@@ -382,6 +554,7 @@ function resizeApp() {
 window.addEventListener('resize', resizeApp);
 resizeApp();
 
+// === State ===
 let currentStudent = '';
 let isSpeakerOn = false;
 let recognition;
@@ -390,10 +563,47 @@ let selectedEl = null;
 let isRecording = false;
 let mediaRecorder, audioChunks = [], micStream;
 let lastBlobUrl = null;
+let selfStar = 0;
+let selfChecks = {};
+let myWorkId = '';
+let peerChecks = {};
+let currentPeerWork = null;
+
 let appData = {
   studentName:'', artworkTitle:'', description:'',
-  audioBase64:'', imageBase64:'', shapeCount:0
+  audioBase64:'', imageBase64:'', shapeCount:0,
+  shapeTypes:[], selfStar:0, selfChecks:{}
 };
+
+// === 작품 설명 예시 문장 (많이!) ===
+const describeExamples = [
+  '저는 동그라미 2개와 세모 1개로 눈사람을 만들었어요.',
+  '세모는 변이 3개라서 지붕을 만들기 좋았어요.',
+  '네모는 꼭짓점이 4개 있어서 집의 몸통으로 썼어요.',
+  '동그라미는 변과 꼭짓점이 없어서 해님을 그렸어요.',
+  '큰 네모 위에 세모를 올려서 집을 만들었어요.',
+  '동그라미를 굴려서 자동차 바퀴를 만들었어요.',
+  '세모 여러 개로 뾰족한 산을 표현했어요.',
+  '네모와 세모를 합쳐서 로켓을 만들었어요.',
+  '꼭짓점이 뾰족한 세모로 별 모양을 꾸몄어요.',
+  '동그라미로 얼굴을 만들고 세모로 모자를 씌웠어요.'
+];
+
+// === 자기평가 체크리스트 (성취기준 기반) ===
+const selfChecklist = [
+  { id:'used_shapes', q:'원, 삼각형, 사각형을 모두 사용했나요?' },
+  { id:'enough', q:'도형을 3개 이상 충분히 넣었나요?' },
+  { id:'meaningful', q:'무엇을 만들었는지 알아볼 수 있나요?' },
+  { id:'described', q:'작품 설명에 도형 이름을 넣었나요?' }
+];
+
+// === 동료평가 루브릭 (객관적 기준) ===
+const peerRubric = [
+  { id:'variety', q:'원, 삼각형, 사각형을 다양하게 사용했나요?' },
+  { id:'count', q:'도형을 3개 이상 사용했나요?' },
+  { id:'recognizable', q:'무엇을 만든 작품인지 알아볼 수 있나요?' },
+  { id:'terms', q:'설명에 변, 꼭짓점 같은 말이 들어갔나요?' }
+];
 
 const fallbackStudents = ['강민재','김서연','박지훈','이하윤','정시우','최유진','강도현','윤서아','임서준','한지은'];
 
@@ -412,21 +622,24 @@ async function loadConfig() {
     const res = await fetch(GAS_URL);
     const data = await res.json();
     populate((data.students && data.students.length) ? data.students : fallbackStudents);
+    if (data.describeExamples && data.describeExamples.length) {
+      describeExamples.length = 0;
+      data.describeExamples.forEach(e => describeExamples.push(e));
+    }
   } catch (e) { populate(fallbackStudents); }
 }
 loadConfig();
 
+// === Audio ===
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const initAudioCtx = () => { if (audioCtx.state === 'suspended') audioCtx.resume(); };
-
 const playClick = () => {
   if (!isSpeakerOn) return;
   initAudioCtx();
   const t = audioCtx.currentTime;
   const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
   osc.connect(gain); gain.connect(audioCtx.destination);
-  osc.type='square';
-  osc.frequency.setValueAtTime(600,t);
+  osc.type='square'; osc.frequency.setValueAtTime(600,t);
   gain.gain.setValueAtTime(0.1,t);
   gain.gain.exponentialRampToValueAtTime(0.01,t+0.05);
   osc.start(t); osc.stop(t+0.05);
@@ -445,7 +658,21 @@ const playChime = () => {
   gain.gain.exponentialRampToValueAtTime(0.01,t+1.5);
   osc.start(t); osc.stop(t+1.5);
 };
+const playWrong = () => {
+  if (!isSpeakerOn) return;
+  initAudioCtx();
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.type='triangle';
+  osc.frequency.setValueAtTime(150,t);
+  osc.frequency.linearRampToValueAtTime(100,t+0.3);
+  gain.gain.setValueAtTime(0.2,t);
+  gain.gain.exponentialRampToValueAtTime(0.01,t+0.5);
+  osc.start(t); osc.stop(t+0.5);
+};
 
+// === TTS ===
 const synth = window.speechSynthesis;
 let bestVoice = null;
 function pickBestVoice() {
@@ -460,7 +687,15 @@ function pickBestVoice() {
 }
 if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => { bestVoice = pickBestVoice(); };
 setTimeout(() => { bestVoice = pickBestVoice(); }, 500);
-
+function speak(text) {
+  if (!text || !isSpeakerOn) return;
+  synth.cancel();
+  if (!bestVoice) bestVoice = pickBestVoice();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR'; u.rate = 0.95; u.pitch = 1.0;
+  if (bestVoice) u.voice = bestVoice;
+  synth.speak(u);
+}
 document.getElementById('speaker-toggle').addEventListener('click', () => {
   isSpeakerOn = !isSpeakerOn;
   const btn = document.getElementById('speaker-toggle');
@@ -468,6 +703,7 @@ document.getElementById('speaker-toggle').addEventListener('click', () => {
   btn.textContent = isSpeakerOn ? '🔊' : '🔈';
 });
 
+// === STT ===
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
@@ -483,7 +719,6 @@ function blobToBase64(blob) {
     r.readAsDataURL(blob);
   });
 }
-
 async function initAudioOnce() {
   if (mediaRecorder) return true;
   try {
@@ -502,10 +737,7 @@ document.querySelectorAll('.color-chip').forEach(c => {
     document.querySelectorAll('.color-chip').forEach(x => x.classList.remove('selected'));
     c.classList.add('selected');
     selectedColor = c.dataset.color;
-    if (selectedEl) {
-      applyColor(selectedEl, selectedColor);
-      playClick();
-    }
+    if (selectedEl) { applyColor(selectedEl, selectedColor); playClick(); }
   });
 });
 document.querySelector('.color-chip').classList.add('selected');
@@ -527,43 +759,32 @@ function applyColor(el, color) {
   el.dataset.color = color;
 }
 
-// === Drag, Rotate, Resize (원본 코드 방식 + 개선) ===
+// === Drag / Rotate / Resize ===
 const canvasArea = document.getElementById('canvas-area');
-
-let isDragging = false;
-let isRotating = false;
-let isResizing = false;
-let dragEl = null;
-let rotateEl = null;
-let resizeEl = null;
+let isDragging = false, isRotating = false, isResizing = false;
+let dragEl = null, rotateEl = null, resizeEl = null;
 let offsetX = 0, offsetY = 0;
 let startAngle = 0, initialRotation = 0;
 let startSize = 0, startMouseDist = 0;
-let activePointerId = null;
 
-// 1. 팔레트에서 새 도형 끌어오기
 document.querySelectorAll('.shape-item').forEach(item => {
   item.addEventListener('pointerdown', e => {
     e.preventDefault();
     const type = item.dataset.type;
-
     const clone = document.createElement('div');
     clone.className = 'clone-item';
     clone.dataset.type = type;
     clone.dataset.rotation = 0;
     clone.dataset.scaleX = 1;
     clone.dataset.color = selectedColor;
-
     const baseSize = 80;
     clone.style.width = baseSize + 'px';
     clone.style.height = baseSize + 'px';
     applyColor(clone, selectedColor);
 
-    // 회전 핸들과 크기조절 핸들 추가
     const rotHandle = document.createElement('div');
     rotHandle.className = 'rotate-handle';
     clone.appendChild(rotHandle);
-
     const resHandle = document.createElement('div');
     resHandle.className = 'resize-handle';
     clone.appendChild(resHandle);
@@ -575,63 +796,41 @@ document.querySelectorAll('.shape-item').forEach(item => {
 
     isDragging = true;
     dragEl = clone;
-    offsetX = baseSize/2;
-    offsetY = baseSize/2;
-    activePointerId = e.pointerId;
-
+    offsetX = baseSize/2; offsetY = baseSize/2;
     selectShape(clone);
     setupCloneInteraction(clone, rotHandle, resHandle);
   });
 });
 
-// 2. 클론 도형의 상호작용 설정 (드래그/회전/크기조절)
 function setupCloneInteraction(el, rotHandle, resHandle) {
-  // 도형 본체 → 드래그
   el.addEventListener('pointerdown', e => {
     if (e.target.classList.contains('rotate-handle') ||
         e.target.classList.contains('resize-handle')) return;
     e.stopPropagation();
-
-    isDragging = true;
-    dragEl = el;
-    activePointerId = e.pointerId;
-
+    isDragging = true; dragEl = el;
     const rect = el.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
-
     selectShape(el);
   });
-
-  // 회전 핸들 → 자유 회전
   rotHandle.addEventListener('pointerdown', e => {
     e.stopPropagation();
-    isRotating = true;
-    rotateEl = el;
-    activePointerId = e.pointerId;
-
+    isRotating = true; rotateEl = el;
     const rect = el.getBoundingClientRect();
     const cx = rect.left + rect.width/2;
     const cy = rect.top + rect.height/2;
     startAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180/Math.PI);
     initialRotation = parseFloat(el.dataset.rotation || 0);
-
     selectShape(el);
   });
-
-  // 크기조절 핸들
   resHandle.addEventListener('pointerdown', e => {
     e.stopPropagation();
-    isResizing = true;
-    resizeEl = el;
-    activePointerId = e.pointerId;
-
+    isResizing = true; resizeEl = el;
     const rect = el.getBoundingClientRect();
     const cx = rect.left + rect.width/2;
     const cy = rect.top + rect.height/2;
     startSize = el.offsetWidth;
     startMouseDist = Math.hypot(e.clientX - cx, e.clientY - cy);
-
     selectShape(el);
   });
 }
@@ -653,58 +852,43 @@ canvasArea.addEventListener('pointerdown', e => {
   }
 });
 
-// 통합 pointermove (document 레벨로 - 캔버스 밖으로 나가도 동작)
 document.addEventListener('pointermove', e => {
   if (!isDragging && !isRotating && !isResizing) return;
-
-  // 회전 중
   if (isRotating && rotateEl) {
     e.preventDefault();
     const rect = rotateEl.getBoundingClientRect();
     const cx = rect.left + rect.width/2;
     const cy = rect.top + rect.height/2;
-    const currentAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180/Math.PI);
-    const diff = currentAngle - startAngle;
-    rotateEl.dataset.rotation = initialRotation + diff;
+    const cur = Math.atan2(e.clientY - cy, e.clientX - cx) * (180/Math.PI);
+    rotateEl.dataset.rotation = initialRotation + (cur - startAngle);
     applyTransform(rotateEl);
     return;
   }
-
-  // 크기조절 중
   if (isResizing && resizeEl) {
     e.preventDefault();
     const rect = resizeEl.getBoundingClientRect();
     const cx = rect.left + rect.width/2;
     const cy = rect.top + rect.height/2;
-    const currentDist = Math.hypot(e.clientX - cx, e.clientY - cy);
-    const ratio = currentDist / startMouseDist;
-    let newSize = Math.max(30, Math.min(400, startSize * ratio));
+    const curDist = Math.hypot(e.clientX - cx, e.clientY - cy);
+    let newSize = Math.max(30, Math.min(400, startSize * (curDist/startMouseDist)));
     resizeEl.style.width = newSize + 'px';
     resizeEl.style.height = newSize + 'px';
     return;
   }
-
-  // 드래그 중
   if (isDragging && dragEl) {
     e.preventDefault();
     const rect = canvasArea.getBoundingClientRect();
-    const x = e.clientX - rect.left - offsetX;
-    const y = e.clientY - rect.top - offsetY;
-    dragEl.style.left = x + 'px';
-    dragEl.style.top = y + 'px';
+    dragEl.style.left = (e.clientX - rect.left - offsetX) + 'px';
+    dragEl.style.top = (e.clientY - rect.top - offsetY) + 'px';
   }
 });
-
-document.addEventListener('pointerup', e => {
-  if (isDragging) { isDragging = false; dragEl = null; }
-  if (isRotating) { isRotating = false; rotateEl = null; }
-  if (isResizing) { isResizing = false; resizeEl = null; }
-  activePointerId = null;
+document.addEventListener('pointerup', () => {
+  isDragging = false; isRotating = false; isResizing = false;
+  dragEl = null; rotateEl = null; resizeEl = null;
 });
 document.addEventListener('pointercancel', () => {
   isDragging = false; isRotating = false; isResizing = false;
   dragEl = null; rotateEl = null; resizeEl = null;
-  activePointerId = null;
 });
 
 function applyTransform(el) {
@@ -713,48 +897,34 @@ function applyTransform(el) {
   el.style.transform = `rotate(${r}deg) scaleX(${sx})`;
 }
 
-// === Action Buttons ===
 document.getElementById('btn-rotate').addEventListener('click', () => {
   if (!selectedEl) return;
-  let r = (parseFloat(selectedEl.dataset.rotation || 0) + 45) % 360;
-  selectedEl.dataset.rotation = r;
-  applyTransform(selectedEl);
-  playClick();
+  selectedEl.dataset.rotation = (parseFloat(selectedEl.dataset.rotation||0)+45)%360;
+  applyTransform(selectedEl); playClick();
 });
 document.getElementById('btn-flip').addEventListener('click', () => {
   if (!selectedEl) return;
-  let sx = parseFloat(selectedEl.dataset.scaleX || 1) * -1;
-  selectedEl.dataset.scaleX = sx;
-  applyTransform(selectedEl);
-  playClick();
+  selectedEl.dataset.scaleX = parseFloat(selectedEl.dataset.scaleX||1)*-1;
+  applyTransform(selectedEl); playClick();
 });
 document.getElementById('btn-duplicate').addEventListener('click', () => {
   if (!selectedEl) return;
   const clone = selectedEl.cloneNode(true);
   clone.classList.remove('selected');
-  clone.style.left = (parseFloat(selectedEl.style.left) + 30) + 'px';
-  clone.style.top = (parseFloat(selectedEl.style.top) + 30) + 'px';
+  clone.style.left = (parseFloat(selectedEl.style.left)+30)+'px';
+  clone.style.top = (parseFloat(selectedEl.style.top)+30)+'px';
   canvasArea.appendChild(clone);
-
-  // 핸들 다시 연결
-  const rotH = clone.querySelector('.rotate-handle');
-  const resH = clone.querySelector('.resize-handle');
-  setupCloneInteraction(clone, rotH, resH);
-
-  selectShape(clone);
-  playClick();
+  setupCloneInteraction(clone, clone.querySelector('.rotate-handle'), clone.querySelector('.resize-handle'));
+  selectShape(clone); playClick();
 });
 document.getElementById('btn-delete').addEventListener('click', () => {
   if (!selectedEl) return;
-  selectedEl.remove();
-  selectedEl = null;
-  playClick();
+  selectedEl.remove(); selectedEl = null; playClick();
 });
 document.getElementById('btn-clear').addEventListener('click', () => {
   if (!confirm('정말 모두 지울까요?')) return;
   document.querySelectorAll('.clone-item').forEach(c => c.remove());
-  selectedEl = null;
-  playClick();
+  selectedEl = null; playClick();
 });
 
 // === Start ===
@@ -764,7 +934,6 @@ document.getElementById('btn-start').addEventListener('click', async () => {
   if (!sel.value) return alert('이름을 선택해주세요!');
   currentStudent = sel.value;
   appData.studentName = currentStudent;
-
   const ok = await initAudioOnce();
   if (!ok) return;
   if (recognition) {
@@ -778,7 +947,7 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// === Finish ===
+// === Finish → 작품 캡쳐 ===
 document.getElementById('btn-finish').addEventListener('click', async () => {
   const shapes = document.querySelectorAll('.clone-item');
   if (shapes.length === 0) {
@@ -788,46 +957,54 @@ document.getElementById('btn-finish').addEventListener('click', async () => {
   const title = document.getElementById('artwork-title').value || '(제목 없음)';
   appData.artworkTitle = title;
   appData.shapeCount = shapes.length;
+  appData.shapeTypes = Array.from(shapes).map(s => s.dataset.type);
 
-  // 캡쳐 전 선택 해제 (점선/핸들 제거)
   document.querySelectorAll('.clone-item').forEach(c => c.classList.remove('selected'));
   const canvas = await html2canvas(canvasArea, { backgroundColor:'#ffffff' });
   appData.imageBase64 = canvas.toDataURL('image/png');
 
   document.getElementById('describe-preview').src = appData.imageBase64;
   document.getElementById('describe-title').innerText = '"' + title + '"';
+  renderExamples();
   showScreen('screen-describe');
 });
+
+// === 예시 문장 ===
+function renderExamples() {
+  const list = document.getElementById('example-list');
+  list.innerHTML = '';
+  describeExamples.forEach(e => {
+    const it = document.createElement('div');
+    it.className = 'example-item';
+    it.innerText = '📌 ' + e;
+    it.addEventListener('click', () => speak(e));
+    list.appendChild(it);
+  });
+}
 
 // === Describe Recording ===
 const descTextarea = document.getElementById('stt-describe');
 const descMicBtn = document.getElementById('mic-describe');
 const descPlayBtn = document.getElementById('play-describe');
-const submitBtn = document.getElementById('btn-submit');
+const toSelfEvalBtn = document.getElementById('to-selfeval');
 
 descTextarea.addEventListener('input', () => {
-  if (descTextarea.value.trim().length > 0) submitBtn.style.display = 'inline-flex';
+  if (descTextarea.value.trim().length > 0) toSelfEvalBtn.style.display = 'inline-flex';
 });
 descPlayBtn.addEventListener('click', () => {
   if (lastBlobUrl) new Audio(lastBlobUrl).play();
 });
 
 descMicBtn.addEventListener('click', async () => {
-  if (!mediaRecorder) {
-    const ok = await initAudioOnce();
-    if (!ok) return;
-  }
-
+  if (!mediaRecorder) { const ok = await initAudioOnce(); if (!ok) return; }
   if (!isRecording) {
     isRecording = true;
     audioChunks = [];
     let existing = descTextarea.value.trim();
     if (existing !== '') existing += ' \n';
-
     descMicBtn.classList.add('recording');
     descMicBtn.innerHTML = '🟥 녹음 종료';
     descTextarea.classList.add('recording');
-
     if (recognition) {
       recognition.onresult = (event) => {
         let curr = '';
@@ -838,7 +1015,6 @@ descMicBtn.addEventListener('click', async () => {
       };
       try { recognition.start(); } catch(e){}
     }
-
     mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
     mediaRecorder.start();
   } else {
@@ -846,52 +1022,185 @@ descMicBtn.addEventListener('click', async () => {
     descMicBtn.classList.remove('recording');
     descMicBtn.innerHTML = '🔴 다시 녹음';
     descTextarea.classList.remove('recording');
-
     if (recognition) {
       try { recognition.stop(); } catch(e){}
       recognition.onresult = null;
     }
-
     mediaRecorder.onstop = async () => {
       const blob = new Blob(audioChunks, { type:'audio/webm' });
       const base64 = await blobToBase64(blob);
       lastBlobUrl = URL.createObjectURL(blob);
       descPlayBtn.disabled = false;
-
       let finalVal = descTextarea.value.trim();
       if (finalVal === '') finalVal = '(내용 없음)';
       descTextarea.value = finalVal;
-
       appData.description = finalVal;
       appData.audioBase64 = base64;
-      submitBtn.style.display = 'inline-flex';
+      toSelfEvalBtn.style.display = 'inline-flex';
     };
     mediaRecorder.stop();
   }
 });
 
-// === Submit ===
-submitBtn.addEventListener('click', async () => {
+// === 자기평가 화면 ===
+toSelfEvalBtn.addEventListener('click', () => {
   appData.description = descTextarea.value.trim();
-  if (!appData.description) appData.description = '(설명 없음)';
+  renderSelfChecklist();
+  showScreen('screen-selfeval');
+});
 
+function renderSelfChecklist() {
+  const cl = document.getElementById('self-checklist');
+  cl.innerHTML = '';
+  selfChecks = {};
+  selfChecklist.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'check-item';
+    row.innerHTML = `
+      <div class="check-q">${item.q}</div>
+      <div class="check-buttons">
+        <button class="check-btn yes" data-id="${item.id}" data-v="yes">예</button>
+        <button class="check-btn no" data-id="${item.id}" data-v="no">아니오</button>
+      </div>`;
+    cl.appendChild(row);
+  });
+  cl.querySelectorAll('.check-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const row = btn.closest('.check-item');
+      row.querySelectorAll('.check-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selfChecks[id] = btn.dataset.v;
+      playClick();
+      checkSelfComplete();
+    });
+  });
+}
+
+function checkSelfComplete() {
+  const allAnswered = selfChecklist.every(item => selfChecks[item.id]);
+  if (allAnswered && selfStar > 0) {
+    document.getElementById('self-submit').style.display = 'inline-flex';
+  }
+}
+
+document.querySelectorAll('#self-stars .star').forEach(s => {
+  s.addEventListener('click', e => {
+    selfStar = parseInt(e.target.dataset.val);
+    document.querySelectorAll('#self-stars .star').forEach(st => {
+      st.classList.toggle('active', parseInt(st.dataset.val) <= selfStar);
+    });
+    playClick();
+    checkSelfComplete();
+  });
+});
+
+// === 자기평가 제출 → 별 3개 이하면 다시 ===
+document.getElementById('self-submit').addEventListener('click', () => {
+  appData.selfStar = selfStar;
+  appData.selfChecks = selfChecks;
+
+  // 별점 3개 이하 → 다시 권유
+  if (selfStar <= 3) {
+    showFeedbackPopup({
+      good:false, icon:'🤔',
+      title:'조금 아쉬운가요?',
+      text:'별점이 낮네요. 작품을 더 멋지게 고쳐볼까요?',
+      list:['도형을 더 추가해보세요','다양한 모양을 써보세요','설명을 더 자세히 해보세요'],
+      showRedo:true,
+      keepText:'그래도 제출할래요',
+      mode:'selfeval-redo'
+    });
+    return;
+  }
+  submitArtwork();
+});
+
+// === 빨간/초록 피드백 팝업 ===
+let fbMode = '';  // 'selfeval-redo' | 'peer-info' | 'peer-redo'
+
+function showFeedbackPopup(opt) {
+  const popup = document.getElementById('feedback-popup');
+  popup.className = 'feedback-popup' + (opt.good ? ' good' : '');
+  document.getElementById('fb-icon').innerText = opt.icon;
+  document.getElementById('fb-title').innerText = opt.title;
+  document.getElementById('fb-text').innerText = opt.text;
+  const ul = document.getElementById('fb-list');
+  ul.innerHTML = '';
+  if (opt.list && opt.list.length) {
+    opt.list.forEach(t => {
+      const li = document.createElement('li');
+      li.innerText = t;
+      ul.appendChild(li);
+    });
+    ul.style.display = 'block';
+  } else {
+    ul.style.display = 'none';
+  }
+  const redoBtn = document.getElementById('fb-redo');
+  const keepBtn = document.getElementById('fb-keep');
+  redoBtn.style.display = opt.showRedo ? 'inline-flex' : 'none';
+  keepBtn.innerText = opt.keepText || '확인';
+  fbMode = opt.mode || '';
+  document.getElementById('feedback-modal').classList.add('show');
+}
+
+document.getElementById('fb-redo').addEventListener('click', () => {
+  // 작품 지우고 스튜디오로 복귀
+  document.getElementById('feedback-modal').classList.remove('show');
+  document.querySelectorAll('.clone-item').forEach(c => c.remove());
+  selectedEl = null;
+  document.getElementById('artwork-title').value = '';
+  descTextarea.value = '';
+  toSelfEvalBtn.style.display = 'none';
+  selfStar = 0;
+  document.querySelectorAll('#self-stars .star').forEach(st => st.classList.remove('active'));
+  fbMode = '';
+  showScreen('screen-studio');
+});
+
+document.getElementById('fb-keep').addEventListener('click', () => {
+  document.getElementById('feedback-modal').classList.remove('show');
+  // 자기평가 단계에서 '그래도 제출할래요' 누른 경우만 제출
+  if (fbMode === 'selfeval-redo') {
+    submitArtwork();
+  }
+  // peer-info, peer-redo의 '괜찮아요'는 그냥 닫기만
+  fbMode = '';
+});
+
+// === 작품 제출 ===
+async function submitArtwork() {
   if (!GAS_URL || GAS_URL.includes('PASTE')) {
     alert('GAS_URL이 설정되지 않았어요.');
     return;
   }
-
+  document.getElementById('loading-text').innerText = '작품을 갤러리에 올리는 중...';
   document.getElementById('loading').style.display = 'flex';
+
+  myWorkId = 'work_' + Date.now();
+  const payload = {
+    source:'studio',
+    action:'submit',
+    workId: myWorkId,
+    studentName: appData.studentName,
+    artworkTitle: appData.artworkTitle,
+    description: appData.description,
+    audioBase64: appData.audioBase64,
+    imageBase64: appData.imageBase64,
+    shapeCount: appData.shapeCount,
+    shapeTypes: (appData.shapeTypes || []).join(','),
+    selfStar: appData.selfStar,
+    selfChecks: JSON.stringify(appData.selfChecks)
+  };
 
   try {
     const res = await fetch(GAS_URL, {
-      method:'POST',
-      body:JSON.stringify({ ...appData, source:'studio' }),
+      method:'POST', body:JSON.stringify(payload),
       headers:{ 'Content-Type':'text/plain' }
     });
-    let result;
-    try { result = await res.json(); } catch { result = { status:'success' }; }
+    try { await res.json(); } catch {}
     document.getElementById('loading').style.display = 'none';
-
     document.getElementById('end-name').innerText = appData.studentName + ' 학생';
     const img = document.getElementById('artwork-preview');
     img.src = appData.imageBase64;
@@ -905,6 +1214,170 @@ submitBtn.addEventListener('click', async () => {
     console.error(err);
     document.getElementById('end-name').innerText = appData.studentName + ' 학생';
     showScreen('screen-end');
+  }
+}
+
+// === 갤러리 ===
+document.getElementById('gallery-btn').addEventListener('click', openGallery);
+document.getElementById('end-gallery').addEventListener('click', openGallery);
+document.getElementById('gallery-back').addEventListener('click', () => {
+  showScreen(myWorkId ? 'screen-end' : 'screen-studio');
+});
+
+async function openGallery() {
+  showScreen('screen-gallery');
+  document.getElementById('gallery-loading').style.display = 'block';
+  document.getElementById('gallery-grid').innerHTML = '';
+
+  if (!GAS_URL || GAS_URL.includes('PASTE')) {
+    document.getElementById('gallery-loading').innerText = '갤러리를 불러올 수 없어요.';
+    return;
+  }
+  try {
+    const res = await fetch(GAS_URL + '?action=gallery');
+    const data = await res.json();
+    document.getElementById('gallery-loading').style.display = 'none';
+    renderGallery(data.works || []);
+  } catch (e) {
+    document.getElementById('gallery-loading').innerText = '갤러리를 불러올 수 없어요.';
+  }
+}
+
+function renderGallery(works) {
+  const grid = document.getElementById('gallery-grid');
+  grid.innerHTML = '';
+  if (works.length === 0) {
+    grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888; font-size:18px;">아직 작품이 없어요. 첫 작품을 만들어보세요!</p>';
+    return;
+  }
+  works.forEach(w => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.innerHTML = `
+      <img src="${w.imageUrl}" onerror="this.style.background='#eee'">
+      <div class="gi-info">
+        <div class="gi-title">${w.title || '(제목 없음)'}</div>
+        <div class="gi-author">🧑‍🎨 ${w.author}</div>
+        <div class="gi-meta">
+          <span>⭐ ${w.selfStar || '-'}</span>
+          <span>💬 ${w.commentCount || 0}</span>
+        </div>
+      </div>`;
+    item.addEventListener('click', () => openDetail(w));
+    grid.appendChild(item);
+  });
+}
+
+// === 작품 상세 + 동료평가 ===
+function openDetail(work) {
+  currentPeerWork = work;
+  peerChecks = {};
+  document.getElementById('detail-title').innerText = work.title || '(제목 없음)';
+  document.getElementById('detail-author').innerText = '🧑‍🎨 ' + work.author;
+  document.getElementById('detail-img').src = work.imageUrl;
+  document.getElementById('detail-desc').innerText = work.description || '(설명 없음)';
+  document.getElementById('peer-comment').value = '';
+
+  // 루브릭
+  const rubricEl = document.getElementById('peer-rubric');
+  rubricEl.innerHTML = '';
+  peerRubric.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'rubric-item';
+    row.innerHTML = `
+      <div class="rubric-q">${item.q}</div>
+      <div class="check-buttons">
+        <button class="check-btn yes" data-id="${item.id}" data-v="yes">예</button>
+        <button class="check-btn no" data-id="${item.id}" data-v="no">아니오</button>
+      </div>`;
+    rubricEl.appendChild(row);
+  });
+  rubricEl.querySelectorAll('.check-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const row = btn.closest('.rubric-item');
+      row.querySelectorAll('.check-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      peerChecks[id] = btn.dataset.v;
+      playClick();
+    });
+  });
+
+  // 기존 댓글
+  const ec = document.getElementById('peer-existing-comments');
+  ec.innerHTML = '';
+  if (work.comments && work.comments.length) {
+    work.comments.forEach(c => {
+      const box = document.createElement('div');
+      box.className = 'comment-box';
+      box.innerHTML = `<div class="comment-author">${c.author}</div><div class="comment-text">${c.text}</div>`;
+      ec.appendChild(box);
+    });
+  }
+
+  document.getElementById('detail-modal').classList.add('show');
+}
+
+document.getElementById('detail-close').addEventListener('click', () => {
+  document.getElementById('detail-modal').classList.remove('show');
+});
+
+// === 동료평가 제출 ===
+document.getElementById('peer-submit').addEventListener('click', async () => {
+  const allRated = peerRubric.every(item => peerChecks[item.id]);
+  if (!allRated) {
+    alert('모든 평가 항목에 답해주세요!');
+    return;
+  }
+  const comment = document.getElementById('peer-comment').value.trim();
+
+  // '아니오'가 2개 이상이면 → 작품 작성자에게 빨간 피드백 (수정 권유)
+  const noCount = peerRubric.filter(item => peerChecks[item.id] === 'no').length;
+
+  document.getElementById('loading-text').innerText = '평가를 제출하는 중...';
+  document.getElementById('loading').style.display = 'flex';
+
+  const payload = {
+    source:'studio',
+    action:'peerReview',
+    workId: currentPeerWork.workId,
+    reviewer: currentStudent,
+    peerChecks: JSON.stringify(peerChecks),
+    comment: comment,
+    noCount: noCount
+  };
+
+  try {
+    await fetch(GAS_URL, {
+      method:'POST', body:JSON.stringify(payload),
+      headers:{ 'Content-Type':'text/plain' }
+    });
+  } catch (e) { console.error(e); }
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('detail-modal').classList.remove('show');
+
+  // 내가 만든 작품을 내가 평가한 경우 + 기준 미달 → 수정 기회
+  if (currentPeerWork.workId === myWorkId && noCount >= 2) {
+    showFeedbackPopup({
+      good:false, icon:'🔴',
+      title:'작품을 수정해 볼까요?',
+      text:'평가 기준에 맞지 않는 부분이 있어요. 친구의 피드백을 보고 고쳐보세요!',
+      list:['도형이 다 안 들어갔어요','다양한 모양을 더 써보세요','설명을 자세히 다시 해보세요'],
+      showRedo:true,
+      keepText:'괜찮아요',
+      mode:'peer-redo'
+    });
+  } else {
+    showFeedbackPopup({
+      good:true, icon:'💖',
+      title:'평가 고마워요!',
+      text:'친구에게 소중한 의견을 남겼어요.',
+      list:[],
+      showRedo:false,
+      keepText:'확인',
+      mode:'peer-info'
+    });
   }
 });
 
